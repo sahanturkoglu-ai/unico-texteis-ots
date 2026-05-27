@@ -1,0 +1,7 @@
+*.backup-*.html
+~$*
+.vscode/
+.claude/
+*.py
+VSCODE_KURULUM_REHBERI.html
+UNICO_TEXTEIS_Sablon.xlsx
