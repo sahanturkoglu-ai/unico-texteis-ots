@@ -948,7 +948,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
       <div class="dash-card" style="margin-bottom:20px;background:linear-gradient(135deg,#FFF7ED 0%,#FEF3E2 100%);border:1px solid #FED7AA">
         <h3 style="font-size:15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <span><i class="fa fa-wand-magic-sparkles" style="color:var(--accent);margin-right:6px"></i>Trend & Kumaş AR-GE Ajanı</span>
-          <span style="font-size:11px;color:var(--muted);font-weight:400">⚡ Groq · Llama 3.3 70B · Canlı</span>
+          <span style="font-size:11px;color:var(--muted);font-weight:400">🛰️ Gemini · Canlı</span>
         </h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Zara, Shein, H&M, Mango, Bershka gibi global moda perakendecilerinin güncel trend, bestseller ve sezon analizini yapar. Kumaş AR-GE için <b>desen, kalite, görsel tema, renk paleti, Pantone</b> önerileri sunar.</p>
 
@@ -3168,7 +3168,7 @@ function renderShipments(){
   const sq=(document.getElementById('ship-search').value||'').toLowerCase();
   const rows=DB.ships.filter(s=>{
     if(sf&&s.status!==sf)return false;
-    if(sq&&!(s.bl||''+s.container||''+s.destCountry+s.number).toLowerCase().includes(sq))return false;
+    if(sq&&!((s.bl||'')+' '+(s.container||'')+' '+(s.destCountry||'')+' '+(s.destPort||'')+' '+(s.number||'')+' '+(s.orderId||'')).toLowerCase().includes(sq))return false;
     return true;
   });
   document.getElementById('shipments-tbody').innerHTML=rows.length?rows.map(s=>{
@@ -3466,7 +3466,7 @@ function importFromExcel(input){
       if(sn==='Siparişler')cnt+=importSheet(data,DB.orders,'orders',r=>({id:uid('SIP'),number:String(r[0]),date:r[1]||'',confirmDate:r[2]||'',customer:r[3]||'',customerCountry:r[4]||'',supplier:r[5]||'',supplierCountry:r[6]||'Türkiye',currency:r[14]||'EUR',status:r[15]||'Beklemede',notes:r[17]||'',lines:[{product:r[7]||'',quality:r[8]||'',color:r[9]||'',colorCode:r[10]||'',qty:r[11]||0,unit:r[12]||'Metre',price:r[13]||0}]}),r=>String(r[0]),'number');
       if(sn==='Lab_Lot')cnt+=importSheet(data,DB.lots,'lots',r=>({id:uid('LAB'),lot:String(r[0]),parti:r[1]||'',orderId:r[2]||'',color:r[3]||'',colorCode:r[4]||'',quality:r[5]||'',qty:r[6]||0,unit:r[7]||'Metre',labStatus:r[8]||'Beklemede',colorStatus:r[9]||'Beklemede',approvalDate:r[10]||'',wash:r[11]||'',light:r[12]||'',rub:r[13]||'',notes:r[14]||''}),r=>String(r[0]),'lot');
       if(sn==='Sevkiyatlar')cnt+=importSheet(data,DB.ships,'ships',r=>({id:uid('SEV'),number:String(r[0]),bl:r[1]||'',container:r[2]||'',orderId:r[3]||'',carrier:r[4]||'',originPort:r[5]||'',destPort:r[6]||'',destCountry:r[7]||'',loadingDate:r[8]||'',eta:r[9]||'',arrivalDate:r[10]||'',freight:r[11]||0,freightCurrency:r[12]||'USD',status:r[13]||'Hazırlanıyor',notes:r[14]||''}),r=>String(r[0]),'number');
-      if(sn==='Faturalar')cnt+=importSheet(data,DB.invs,'invs',r=>({id:uid('FAT'),number:String(r[0]),date:r[1]||'',type:r[2]||'Satış',party:r[3]||'',country:r[4]||'',orderId:r[5]||'',shipmentId:'',currency:r[11]||'EUR',terms:'',dueDate:r[12]||'',payStatus:r[13]||'Beklemede',payDate:'',notes:'',lines:[{desc:r[6]||'',color:'',qty:r[7]||0,unit:r[8]||'Metre',price:r[9]||0}]}),r=>String(r[0]),'number');
+      if(sn==='Faturalar')cnt+=importSheet(data,DB.invs,'invs',r=>({id:uid('FAT'),number:String(r[0]),date:r[1]||'',type:r[2]||'Satış',party:r[3]||'',country:r[4]||'',orderId:r[5]||'',shipmentId:r[6]||'',currency:r[13]||'EUR',terms:r[14]||'',dueDate:r[15]||'',payStatus:r[16]||'Beklemede',payDate:r[17]||'',notes:r[18]||'',lines:[{desc:r[7]||'',color:r[8]||'',qty:r[9]||0,unit:r[10]||'Metre',price:r[11]||0}]}),r=>String(r[0]),'number');
     });
     renderDashboard();toast(`Import tamamlandı: ${cnt} kayıt işlendi`,'success');
   };
@@ -3881,7 +3881,7 @@ function doExcelImport(input){
       if(excelCurrentTarget==='orders')cnt+=importSheet(data,DB.orders,'orders',r=>({id:uid('SIP'),number:String(r[0]),date:r[1]||'',confirmDate:r[2]||'',customer:r[3]||'',customerCountry:r[4]||'',supplier:r[5]||'',supplierCountry:r[6]||'Türkiye',currency:r[14]||'EUR',status:r[15]||'Beklemede',notes:r[17]||'',lines:[{product:r[7]||'',quality:r[8]||'',color:r[9]||'',colorCode:r[10]||'',qty:r[11]||0,unit:r[12]||'Metre',price:r[13]||0}]}),r=>String(r[0]),'number');
       if(excelCurrentTarget==='lots')cnt+=importSheet(data,DB.lots,'lots',r=>({id:uid('LAB'),lot:String(r[0]),parti:r[1]||'',orderId:r[2]||'',color:r[3]||'',colorCode:r[4]||'',quality:r[5]||'',qty:r[6]||0,unit:r[7]||'Metre',labStatus:r[8]||'Beklemede',colorStatus:r[9]||'Beklemede',approvalDate:r[10]||'',wash:r[11]||'',light:r[12]||'',rub:r[13]||'',notes:r[14]||''}),r=>String(r[0]),'lot');
       if(excelCurrentTarget==='ships')cnt+=importSheet(data,DB.ships,'ships',r=>({id:uid('SEV'),number:String(r[0]),bl:r[1]||'',container:r[2]||'',orderId:r[3]||'',carrier:r[4]||'',originPort:r[5]||'',destPort:r[6]||'',destCountry:r[7]||'',loadingDate:r[8]||'',eta:r[9]||'',arrivalDate:r[10]||'',freight:r[11]||0,freightCurrency:r[12]||'USD',status:r[13]||'Hazırlanıyor',notes:r[14]||''}),r=>String(r[0]),'number');
-      if(excelCurrentTarget==='invs')cnt+=importSheet(data,DB.invs,'invs',r=>({id:uid('FAT'),number:String(r[0]),date:r[1]||'',type:r[2]||'Satış',party:r[3]||'',country:r[4]||'',orderId:r[5]||'',shipmentId:'',currency:r[11]||'EUR',terms:'',dueDate:r[12]||'',payStatus:r[13]||'Beklemede',payDate:'',notes:'',lines:[{desc:r[6]||'',color:'',qty:r[7]||0,unit:r[8]||'Metre',price:r[9]||0}]}),r=>String(r[0]),'number');
+      if(excelCurrentTarget==='invs')cnt+=importSheet(data,DB.invs,'invs',r=>({id:uid('FAT'),number:String(r[0]),date:r[1]||'',type:r[2]||'Satış',party:r[3]||'',country:r[4]||'',orderId:r[5]||'',shipmentId:r[6]||'',currency:r[13]||'EUR',terms:r[14]||'',dueDate:r[15]||'',payStatus:r[16]||'Beklemede',payDate:r[17]||'',notes:r[18]||'',lines:[{desc:r[7]||'',color:r[8]||'',qty:r[9]||0,unit:r[10]||'Metre',price:r[11]||0}]}),r=>String(r[0]),'number');
     });
     if(cnt===0){toast('Geçerli sheet bulunamadı. Beklenen ad: '+valid.join(' veya '),'error');}
     else{toast(cnt+' kayıt '+EXCEL_LABELS[excelCurrentTarget]+'e eklendi/güncellendi','success');closeModal('modal-excel');reRender();}
@@ -4844,8 +4844,14 @@ KURALLAR:
     let text='';
     let providerUsed='';
 
-    // 1) Groq (en hızlı)
-    const groqKey=getAIKey('groq');
+    // ✅ Tek AI motoru: Gemini (yüksek token, sohbet personası YOK — uzun trend raporu kesilmesin).
+    try{
+      text=await aiText(prompt, sys, {maxOutputTokens:4096, temperature:0.8}) || '';
+      providerUsed='Gemini';
+    }catch(e){ console.warn('Fashion Gemini fail:',e.message); }
+    out.innerHTML='';
+    // Eski ölü sağlayıcı zinciri (Groq/Pollinations) devre dışı — aşağıdaki if(groqKey) bloğuna asla girilmez:
+    const groqKey='';
     if(groqKey){
       try{
         const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -5615,16 +5621,26 @@ function _speakNaturalLocal(text){
     let voice=lang==='en'?TTS_VOICE_EN:TTS_VOICE_TR;
     if(!voice){TTS_VOICE_TR=pickVoice('tr');TTS_VOICE_EN=pickVoice('en');voice=lang==='en'?TTS_VOICE_EN:TTS_VOICE_TR;}
     const doSpeak=()=>{
-      const chunks=(clean.match(/[^.!?\n]+[.!?]?/g)||[clean]).filter(s=>s.trim().length>2);
-      chunks.forEach((s,idx)=>{
-        const ut=new SpeechSynthesisUtterance(s.trim());
+      const chunks=(clean.match(/[^.!?\n]+[.!?]?/g)||[clean]).map(s=>s.trim()).filter(s=>s.length>2);
+      if(!chunks.length)return;
+      // Chrome/mobil 'pause' hatası workaround: 14sn'de bir resume tetikle
+      if(window._ttsKeepAlive)clearInterval(window._ttsKeepAlive);
+      window._ttsKeepAlive=setInterval(()=>{ if(speechSynthesis.speaking){speechSynthesis.pause();speechSynthesis.resume();} else {clearInterval(window._ttsKeepAlive);window._ttsKeepAlive=null;} },14000);
+      // Mobilde çoklu utterance'ı AYNI ANDA kuyruğa atmak güvenilmez (sadece ilki okunuyor).
+      // Bu yüzden SIRALI zincir: her chunk'ı bir öncekinin onend'inde başlat.
+      let idx=0;
+      const speakNext=()=>{
+        if(idx>=chunks.length){ if(window._ttsKeepAlive){clearInterval(window._ttsKeepAlive);window._ttsKeepAlive=null;} if(window._voiceLoopActive)setTimeout(startNaturalVoiceMode,300); return; }
+        const ut=new SpeechSynthesisUtterance(chunks[idx]);
         if(voice){ut.voice=voice;ut.lang=voice.lang;}else ut.lang=lang==='en'?'en-US':'tr-TR';
         ut.rate=lang==='tr'?0.92:0.95;
-        ut.pitch=lang==='tr'?1.0:1.0;
+        ut.pitch=1.0;
         ut.volume=1.0;
-        if(idx===chunks.length-1&&window._voiceLoopActive){ut.onend=()=>setTimeout(startNaturalVoiceMode,300);}
+        ut.onend=()=>{ idx++; speakNext(); };
+        ut.onerror=()=>{ idx++; speakNext(); };
         speechSynthesis.speak(ut);
-      });
+      };
+      speakNext();
     };
     // Sesler henüz yüklenmediyse kısa bekle
     if(speechSynthesis.getVoices().length===0){
@@ -7871,11 +7887,69 @@ function prospectQuick(q) {
 // #8 — Model çıktısından JSON dizisini sağlam çıkar (<think>, ```json çitleri, ilk[..son] dilim, obje kurtarma)
 function extractJsonArray(raw){
   if(!raw)return [];
-  let t=String(raw).replace(/<think>[\s\S]*?<\/think>/gi,'').replace(/```(?:json)?/gi,'').replace(/```/g,'');
+  let t=String(raw).replace(/<think>[\s\S]*?<\/think>/gi,'').replace(/```(?:json)?/gi,'').replace(/```/g,'').trim();
+  // 1) Tüm metin doğrudan JSON dizisi mi?
+  if(t[0]==='['){ try{const arr=JSON.parse(t);if(Array.isArray(arr))return arr;}catch(_){} }
+  // 2) İlk [ ile son ] arasını dene
   const a=t.indexOf('['),b=t.lastIndexOf(']');
-  if(a<0||b<0||b<a)return [];
-  try{const arr=JSON.parse(t.slice(a,b+1));return Array.isArray(arr)?arr:[];}
-  catch(e){const objs=t.slice(a,b+1).match(/\{[^{}]*\}/g)||[];const out=[];objs.forEach(o=>{try{out.push(JSON.parse(o));}catch(_){}});return out;}
+  if(a>=0&&b>a){ try{const arr=JSON.parse(t.slice(a,b+1));if(Array.isArray(arr))return arr;}catch(_){} }
+  // 3) Kesik/bozuk dizi: tek tek obje kurtarma (balanced-brace tarama, nested obje dahil)
+  const src=(a>=0?t.slice(a):t);
+  const out=[];let depth=0,start=-1;
+  for(let i=0;i<src.length;i++){const ch=src[i];
+    if(ch==='{'){if(depth===0)start=i;depth++;}
+    else if(ch==='}'){depth--;if(depth===0&&start>=0){const piece=src.slice(start,i+1);try{out.push(JSON.parse(piece));}catch(_){}start=-1;}}
+  }
+  return out;
+}
+// ── JSON-odaklı doğrudan Gemini çağrısı (sohbet personası/history YOK, yüksek token, JSON mime) ──
+async function aiJSON(prompt,opts){
+  opts=opts||{};
+  let key=getAIKey('gemini');
+  if(!key&&typeof syncKeysFromFirestore==='function'){ try{ await syncKeysFromFirestore(); key=getAIKey('gemini'); }catch(e){} }
+  if(!key)throw new Error('Gemini anahtarı yok — 🔑 AI Ayarları → Gemini anahtarını gir (aistudio.google.com, ücretsiz).');
+  const models=[(localStorage.getItem('unico_gemini_text_model')||'gemini-2.5-flash'),'gemini-2.0-flash','gemini-flash-latest'];
+  const sys=opts.system||'Yalnızca geçerli bir JSON dizisi döndür. Açıklama, markdown kod çiti, <think> veya ek metin EKLEME. Çıktı doğrudan [ ile başlamalı ] ile bitmeli.';
+  let lastErr='';
+  for(const gm of models){
+    try{
+      const body={systemInstruction:{parts:[{text:sys}]},contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:opts.temperature!=null?opts.temperature:0.4,maxOutputTokens:opts.maxOutputTokens||8192,responseMimeType:'application/json'}};
+      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+gm+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(!res.ok){lastErr='Gemini '+gm+' HTTP '+res.status;
+        // responseMimeType desteklemeyen model olabilir → bir kez mime'siz tekrar dene
+        if(res.status===400){delete body.generationConfig.responseMimeType;const r2=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+gm+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(r2.ok){const j2=await r2.json();const t2=(((j2.candidates||[])[0]||{}).content||{}).parts||[];const out2=t2.filter(p=>p.text).map(p=>p.text).join('').trim();if(out2)return out2;}}
+        continue;}
+      const j=await res.json();
+      const parts=((((j.candidates||[])[0]||{}).content)||{}).parts||[];
+      const text=parts.filter(p=>p.text).map(p=>p.text).join('').trim();
+      if(text)return text;
+      lastErr='Gemini '+gm+' boş yanıt';
+    }catch(e){lastErr=e.message;}
+  }
+  throw new Error(lastErr||'Gemini yanıt vermedi');
+}
+// ── Serbest-metin Gemini çağrısı (uzun rapor için yüksek token, sohbet personası YOK) ──
+async function aiText(prompt,system,opts){
+  opts=opts||{};
+  let key=getAIKey('gemini');
+  if(!key&&typeof syncKeysFromFirestore==='function'){ try{ await syncKeysFromFirestore(); key=getAIKey('gemini'); }catch(e){} }
+  if(!key)throw new Error('Gemini anahtarı yok — 🔑 AI Ayarları → Gemini anahtarını gir (aistudio.google.com, ücretsiz).');
+  const models=[(localStorage.getItem('unico_gemini_text_model')||'gemini-2.5-flash'),'gemini-2.0-flash','gemini-flash-latest'];
+  let lastErr='';
+  for(const gm of models){
+    try{
+      const body={contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:opts.temperature!=null?opts.temperature:0.8,maxOutputTokens:opts.maxOutputTokens||4096}};
+      if(system)body.systemInstruction={parts:[{text:system}]};
+      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+gm+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(!res.ok){lastErr='Gemini '+gm+' HTTP '+res.status;continue;}
+      const j=await res.json();
+      const parts=((((j.candidates||[])[0]||{}).content)||{}).parts||[];
+      const text=parts.filter(p=>p.text).map(p=>p.text).join('').trim();
+      if(text)return text;
+      lastErr='Gemini '+gm+' boş yanıt';
+    }catch(e){lastErr=e.message;}
+  }
+  throw new Error(lastErr||'Gemini yanıt vermedi');
 }
 async function prospectSearch() {
   const product = document.getElementById('pr-product').value.trim();
@@ -7906,13 +7980,13 @@ async function prospectSearch() {
     + '[\n  {\n    "company": "Gerçek Firma Adı",\n    "country": "' + country + '",\n    "city": "Şehir",\n    "sector": "Sektör",\n    "products": "Aldığı ürünler",\n    "contact_name": "İletişim kişisi (varsa, yoksa mevcut degil)",\n    "email": "mevcut degil",\n    "phone": "mevcut degil",\n    "website": "www.firma.com (biliniyorsa)",\n    "annual_import": "~XXX.XXX EUR/yıl",\n    "notes": "LinkedIn arama ipucu: ..."\n  }\n]\n\nSadece JSON array döndür, başka metin ekleme.';
 
   try {
-    const raw = await agentAskAI(prompt, null);
+    const raw = await aiJSON(prompt, {maxOutputTokens:8192, temperature:0.4});
     let firms = extractJsonArray(raw);
 
     status.style.display = 'none';
     if (!firms.length) {
       results.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted)">'
-        + '<p>AI sonuç üretemedi. Groq/OpenRouter anahtarın aktif mi kontrol et.</p>'
+        + '<p>AI sonuç üretemedi. 🔑 AI Ayarları → Gemini anahtarın aktif mi kontrol et (aistudio.google.com).</p>'
         + '<pre style="text-align:left;font-size:11px;background:#f5f5f5;padding:12px;border-radius:8px;overflow:auto;max-height:200px">' + escHtml(raw.slice(0, 800)) + '</pre>'
         + '</div>';
     } else {
@@ -8203,8 +8277,7 @@ Yanıtı SADECE JSON formatında ver, başka hiçbir şey yazma:
 EMİN OLMADIĞIN firmayı listeleme — uydurma/jenerik firma KESİNLİKLE YASAK. 5-8 GERÇEK firma ver. Potansiyel: Yüksek / Orta / Düşük. Yalnızca geçerli JSON dizisi döndür (<think>/markdown/açıklama YOK).`;
 
   try {
-    let raw = '';
-    await agentAskAI(prompt, chunk => { raw += chunk; });
+    const raw = await aiJSON(prompt, {maxOutputTokens:8192, temperature:0.4});
     const firms = extractJsonArray(raw);
     if (!firms.length) throw new Error('AI geçerli sonuç döndürmedi. Tekrar dene.');
     statusEl.style.display = 'none';
