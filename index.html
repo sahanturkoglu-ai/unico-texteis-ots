@@ -2559,9 +2559,31 @@ function renderBalanceSheet(){
         data:{labels:['İhracat','Yurtiçi Satış','İthalat (SMM)','Faaliyet Gideri','Vergi','Net Kâr'],
           datasets:[{data:[exportSales,domesticSales,imports,opex,taxes.total,Math.max(0,netProfit)],
           backgroundColor:['#6366F1','#0EA5E9','#D97706','#F59E0B','#EF4444','#10B981']}]},
-        options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}},cutout:'58%'}});
+        options:{animation:false,devicePixelRatio:Math.max(2,window.devicePixelRatio||1),plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}},cutout:'58%'}});
     }
   }catch(e){console.warn('bal chart fail',e.message);}
+}
+// Marka logosunu (sidebar SVG) PDF için lacivert rozet PNG'ye çevir — beyaz şeritler beyaz zeminde görünür olsun
+async function getBrandLogoPNG(size){
+  size=size||120;
+  try{
+    const src=document.querySelector('.sb-logo-inner svg');
+    if(!src||typeof XMLSerializer==='undefined')return null;
+    const acc=((getComputedStyle(document.documentElement).getPropertyValue('--accent'))||'#D97706').trim();
+    let svg=new XMLSerializer().serializeToString(src).replace(/var\(--accent\)/g,acc);
+    if(svg.indexOf('xmlns=')<0) svg=svg.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"');
+    const url='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)));
+    const img=new Image();
+    await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=url;});
+    const c=document.createElement('canvas'); c.width=size; c.height=size;
+    const ctx=c.getContext('2d');
+    ctx.fillStyle='#0D1B2A';
+    if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(0,0,size,size,size*0.18); ctx.fill(); }
+    else { ctx.fillRect(0,0,size,size); }
+    const pad=size*0.12;
+    ctx.drawImage(img,pad,pad,size-2*pad,size-2*pad);
+    return c.toDataURL('image/png');
+  }catch(e){ console.warn('logo png fail',e&&e.message); return null; }
 }
 async function exportBalanceSheetPDF(){
   if(typeof window.jspdf==='undefined'||typeof html2canvas==='undefined'){toast('PDF kütüphanesi yüklenemedi','error');return;}
@@ -2570,18 +2592,34 @@ async function exportBalanceSheetPDF(){
   if(!target){toast('Bilanço bulunamadı','error');return;}
   toast('PDF hazırlanıyor...','info');
   try{
-    if(typeof Chart!=='undefined'&&balChartInst){ await new Promise(r=>setTimeout(r,400)); }
+    // Chart'ı animasyonsuz + eksiksiz çiz (yarım yakalama / yeniden-yükleme önlenir)
+    if(typeof Chart!=='undefined'&&balChartInst){ try{balChartInst.update('none');}catch(_){ } }
+    const logo=await getBrandLogoPNG(120);
+    await new Promise(r=>setTimeout(r,250));
     const {jsPDF}=window.jspdf;
-    const canvas=await html2canvas(target,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const canvas=await html2canvas(target,{scale:3,backgroundColor:'#ffffff',useCORS:true,logging:false});
     const pdf=new jsPDF('p','mm','a4');
     const pageW=pdf.internal.pageSize.getWidth();
+    const pageH=pdf.internal.pageSize.getHeight();
     const y=(document.getElementById('bal-year')||{}).value||'';
+    // ── Header: sol üstte firma logosu ──
+    if(logo){ try{ pdf.addImage(logo,'PNG',10,8,15,15); }catch(_){ } }
+    const tx=logo?28:10;
     pdf.setFontSize(14); pdf.setTextColor(13,27,42);
-    pdf.text('UNICO TEXTEIS — Bilanço & P&L & Portekiz Vergileri',10,12);
+    pdf.text('UNICO TEXTEIS — Bilanço & P&L & Portekiz Vergileri',tx,14);
     pdf.setFontSize(9); pdf.setTextColor(120,120,120);
-    pdf.text((y?('Dönem: '+y):'Tüm yıllar')+' · '+today(),10,18);
+    pdf.text((y?('Dönem: '+y):'Tüm yıllar')+' · '+today(),tx,20);
+    // ── İçerik: çok sayfalı (uzun bilanço tek sayfaya sığmazsa alt kısım kesilmesin) ──
+    const imgData=canvas.toDataURL('image/png');
     const imgW=pageW-20, imgH=canvas.height*imgW/canvas.width;
-    pdf.addImage(canvas.toDataURL('image/png'),'PNG',10,22,imgW,imgH);
+    const topY=26;
+    pdf.addImage(imgData,'PNG',10,topY,imgW,imgH);
+    let rendered=pageH-topY;
+    while(rendered<imgH){
+      pdf.addPage();
+      pdf.addImage(imgData,'PNG',10,-rendered,imgW,imgH);
+      rendered+=pageH;
+    }
     pdf.save('UNICOT_Bilanco_'+(y||'tum')+'_'+today()+'.pdf');
     toast('Bilanço PDF indirildi','success');
   }catch(e){toast('PDF hatası: '+e.message,'error');}
