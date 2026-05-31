@@ -4923,7 +4923,7 @@ function renderReports(){
     repCharts.trend=new Chart(trendCtx,{
       type:'line',
       data:{labels:trendLabels,datasets:[{label:'Ciro',data:trendValues,borderColor:'#D97706',backgroundColor:'rgba(217,119,6,.15)',fill:true,tension:.35,borderWidth:2,pointRadius:4,pointBackgroundColor:'#D97706'}]},
-      options:{animation:false,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)+' '+_cur}}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+      options:{animation:false,devicePixelRatio:2,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)+' '+_cur}}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}
     });
   }
 
@@ -4936,7 +4936,7 @@ function renderReports(){
     repCharts.cust=new Chart(document.getElementById('rep-customer-chart'),{
       type:'bar',
       data:{labels:topCust.map(c=>c[0].slice(0,20)),datasets:[{data:topCust.map(c=>c[1]),backgroundColor:['#D97706','#10B981','#3B82F6','#F59E0B','#EF4444','#8B5CF6','#0891B2','#EC4899','#84CC16','#6366F1'],borderWidth:0,borderRadius:6}]},
-      options:{animation:false,indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}
+      options:{animation:false,devicePixelRatio:2,indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}
     });
   }
 
@@ -4950,7 +4950,7 @@ function renderReports(){
     repCharts.country=new Chart(document.getElementById('rep-country-chart'),{
       type:'pie',
       data:{labels:countries.map(c=>{const pct=countryTotal?(c[1]/countryTotal*100).toFixed(1):0;return c[0]+' (%'+pct+')';}),datasets:[{data:countries.map(c=>c[1]),backgroundColor:['#D97706','#10B981','#3B82F6','#F59E0B','#EF4444','#8B5CF6','#0891B2','#EC4899'],borderWidth:2,borderColor:'#fff'}]},
-      options:{maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>{const pct=countryTotal?(c.parsed/countryTotal*100).toFixed(1):0;return ' '+fmt(c.parsed)+' EUR (%'+pct+')';}}}}}
+      options:{animation:false,devicePixelRatio:2,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>{const pct=countryTotal?(c.parsed/countryTotal*100).toFixed(1):0;return ' '+fmt(c.parsed)+' EUR (%'+pct+')';}}}}}
     });
     // Donut/pie üstüne yüzde overlay
     addPiePercentPlugin(repCharts.country);
@@ -4993,7 +4993,7 @@ function renderReports(){
     repCharts.status=new Chart(document.getElementById('rep-status-chart'),{
       type:'pie',
       data:{labels:stKeys.map(k=>{const pct=statTotal?(statCount[k]/statTotal*100).toFixed(1):0;return k+' (%'+pct+')';}),datasets:[{data:Object.values(statCount),backgroundColor:['#F59E0B','#10B981','#3B82F6','#8B5CF6','#22C55E','#0891B2','#EF4444'],borderWidth:2,borderColor:'#fff'}]},
-      options:{maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>{const pct=statTotal?(c.parsed/statTotal*100).toFixed(1):0;return ' '+c.parsed+' sipariş (%'+pct+')';}}}}}
+      options:{animation:false,devicePixelRatio:2,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>{const pct=statTotal?(c.parsed/statTotal*100).toFixed(1):0;return ' '+c.parsed+' sipariş (%'+pct+')';}}}}}
     });
     addPiePercentPlugin(repCharts.status);
   }
@@ -5458,13 +5458,14 @@ function exportReports(){
 
   // Tüm canvas'ları PNG'ye çevir (yoksa boş gelir!)
   const chartImages={};
-  setTimeout(()=>{
+  setTimeout(async ()=>{
     Object.keys(repCharts||{}).forEach(k=>{
       try{
         const ch=repCharts[k];if(!ch)return;
         chartImages[k]=ch.toBase64Image('image/png',1.0);
       }catch(e){console.warn('Chart toImage fail',k,e.message);}
     });
+    const logo=(typeof getBrandLogoPNG==='function')?await getBrandLogoPNG(140):null;
 
     // KPI ve tablo HTML'leri
     const kpisHtml=document.getElementById('rep-kpis')?.innerHTML||'';
@@ -5481,6 +5482,7 @@ function exportReports(){
     const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UNICO TEXTEIS Raporu — ${new Date().toLocaleDateString('tr-TR')}</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
+  :root{--accent:#D97706;--primary:#1E40AF;--border:#E5E7EB;--muted:#666;--card:#fff;--bg:#fff;--text:#0D0D0D;--hover:#F1F5F9}
   body{font-family:'Segoe UI',sans-serif;padding:30px;color:#0D0D0D;line-height:1.5;background:#fff;max-width:1100px;margin:0 auto}
   .pdf-header{border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
   .pdf-header h1{font-size:22px;font-weight:800;color:#0D0D0D}
@@ -5534,9 +5536,12 @@ function exportReports(){
 .country-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .market-section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:18px 0 10px}
 </style></head><body>
-<div class="pdf-header">
-  <h1>🧵 UNICO TEXTEIS — Yönetim Raporu</h1>
-  <div class="sub">${headerInfo} · Oluşturma: ${new Date().toLocaleString('tr-TR')}</div>
+<div class="pdf-header" style="display:flex;align-items:center;gap:14px">
+  ${logo?`<img src="${logo}" alt="UNICO TEXTEIS" style="width:52px;height:52px;border-radius:11px;flex-shrink:0">`:''}
+  <div style="flex:1">
+    <h1>UNICO TEXTEIS — Yönetim Raporu</h1>
+    <div class="sub">${headerInfo} · Oluşturma: ${new Date().toLocaleString('tr-TR')}</div>
+  </div>
 </div>
 
 <h2>📊 Anahtar Göstergeler</h2>
@@ -5565,7 +5570,7 @@ ${marginTbl}
 </body></html>`;
     w.document.open();w.document.write(html);w.document.close();
     toast('PDF/Yazdır penceresi açıldı','success');
-  },400);
+  },700);
 }
 
 // ═══════════════════════════════════════════════════════════════
