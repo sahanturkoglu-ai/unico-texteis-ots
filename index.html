@@ -476,6 +476,14 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
   #main{max-width:1440px;margin:0 auto;}
   #content{max-width:1400px;}
 }
+/* Mobil: alttaki UNICO AI asistan butonu (#agent-fab) için güvenli boşluk —
+   veri butonun altına kaymasın; buton ve son satırlar hep görünür kalsın.
+   112px = sembol (64px) + ofset (20px) + biraz pay; iPhone home-indicator için env(). */
+@media(max-width:768px){
+  #content{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important;}
+  /* sync rozetini sola al — sağ-alttaki AI butonuyla çakışmasın */
+  #sync-pill{left:8px;right:auto;bottom:8px;}
+}
   #today-date{display:none}
   .table-header{flex-direction:column;align-items:stretch}
   .table-header > div{justify-content:flex-start}
