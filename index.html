@@ -6,7 +6,7 @@
 <title>UNICO TEXTEIS — Online Takip Sistemi</title>
 <meta name="description" content="UNICO TEXTEIS Online Takip Sistemi (OTS) — sipariş, üretim, laboratuvar, sevkiyat, fatura ve cari süreçlerini tek panelden yöneten tekstil iş takip platformu.">
 <meta name="author" content="UNICO TEXTEIS">
-<meta name="theme-color" content="var(--accent)">
+<meta name="theme-color" content="#F97316">
 <meta name="robots" content="noindex,nofollow">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -319,6 +319,13 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 @media(max-width:600px){
   #agent-panel{width:calc(100vw - 24px);right:12px;bottom:100px;height:75vh;}
   #agent-fab{bottom:20px;right:20px;}
+  /* AI panel başlığı dar ekranda: ikon butonlar iç içe girmesin → başlığı sar, kontrolleri kendi satırında tek sıra yap */
+  #agent-header{flex-wrap:wrap;gap:8px;padding:12px 14px;}
+  #agent-header .header-left{flex:1 1 100%;}
+  #agent-header > div:last-child{flex:1 1 100%;justify-content:space-between;}
+  #agent-header-actions{display:flex;flex-wrap:nowrap;gap:4px;}
+  #agent-header-actions button{padding:8px 9px;font-size:14px;}
+  #agent-selector select{font-size:12px;padding:7px 26px 7px 10px;}
 }
 @media(min-width:1280px){
   #agent-panel{width:600px;height:calc(100vh - 110px);max-height:960px;}
@@ -483,7 +490,6 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
   #content{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important;}
   /* sync rozetini sola al — sağ-alttaki AI butonuyla çakışmasın */
   #sync-pill{left:8px;right:auto;bottom:8px;}
-}
   #today-date{display:none}
   .table-header{flex-direction:column;align-items:stretch}
   .table-header > div{justify-content:flex-start}
@@ -493,6 +499,18 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
   .alert-bar{flex-direction:column;padding:12px}
   .alert-bar ul{flex-direction:column;gap:4px}
   .alert-bar ul li{width:100%}
+  /* --- Mobil UX düzeltmeleri (2026-06-01) --- */
+  /* iOS Safari odak-zoom'unu engelle: tüm form alanları ≥16px */
+  input,select,textarea,.filters select,.filters input,.search-box input{font-size:16px;}
+  /* Sipariş/fatura satırını mobilde 2 kolona indir (6 kolon kullanılamıyordu) */
+  .line-item{grid-template-columns:1fr 1fr;align-items:start;}
+  .line-item .remove-line{grid-column:1 / -1;width:100%;height:44px;}
+  /* Modal açıkken AI butonu + sync rozeti form butonlarını örtmesin */
+  body:has(.modal-overlay.open) #agent-fab,
+  body:has(.modal-overlay.open) #sync-pill{opacity:0;visibility:hidden;pointer-events:none;}
+  /* Liste başlığı aksiyon butonları (Siparişler/Faturalar vb.) ekran dışına taşmasın: alta sar + küçült */
+  .table-header > div{flex-wrap:wrap;gap:6px;}
+  .table-header > div .btn{flex:1 1 auto;min-width:118px;justify-content:center;font-size:12px;padding:8px 10px;white-space:nowrap;}
 }
 /* PDF / file attachment chip */
 .file-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#FEF3E2;border:1px solid #FDE5C9;border-radius:14px;font-size:11px;color:#9A3412;cursor:pointer;margin:2px}
@@ -635,7 +653,6 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
     <div class="sb-item" onclick="exportAll()"><i class="fa fa-download"></i> <span data-i18n="exportAll">Tümünü Export Et</span></div>
     <div class="sb-item" onclick="document.getElementById('importFile').click()"><i class="fa fa-upload"></i> <span data-i18n="excelImport">Excel Import</span></div>
     <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(this)">
-    <div class="sb-item" onclick="exportToObsidian()"><i class="fa fa-book-open"></i> <span data-i18n="obsidian">Obsidian'a Aktar</span></div>
     <div class="sb-section">AI Ajanlar</div>
     <div class="sb-item" data-view="planner"><i class="fa fa-calendar-days"></i> <span>Ajanda &amp; Planlayıcı</span> <span style="font-size:9px;background:#6366F1;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">YENİ</span></div>
     <div class="sb-item" data-view="prospect"><i class="fa fa-earth-europe"></i> <span>Pazar &amp; Müşteri İstihbaratı</span> <span style="font-size:9px;background:#1E40AF;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">AJAN</span></div>
@@ -1556,6 +1573,13 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 .ag-btn-cancel:hover{background:#F9FAFB}
 .ag-btn-all{background:rgba(16,185,129,.1);color:#059669;border:1px solid rgba(16,185,129,.22);padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;margin-right:auto}
 .ag-btn-all:hover{background:rgba(16,185,129,.18)}
+@media(max-width:600px){
+  /* AI Ayarları modal footer: API girişi/test/kaydet butonları iç içe girmesin → düzgün sar */
+  .ag-foot{flex-wrap:wrap;gap:8px;padding:14px;}
+  .ag-foot .ag-btn-all{margin-right:0;}
+  .ag-foot .ag-btn-all,.ag-foot .btn-sm,.ag-foot .ag-btn-cancel,.ag-foot .ag-btn-save{flex:1 1 42%;justify-content:center;text-align:center;}
+  .ag-foot > div{flex:1 1 100%;}
+}
 .market-tab-bar{display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap}
 .market-tab{padding:9px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--muted);transition:.2s;border-bottom:2px solid transparent;margin-bottom:-2px}
 .market-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -2096,7 +2120,7 @@ const db   = firebase.firestore();
 
 // ── Transport sertleştirme: bazı IP'lerde (mobil operatör/ofis WiFi/ISP) WebSocket bloklu
 //    → otomatik long-polling'e düş. settings() HER Firestore çağrısından ÖNCE gelmeli. ──
-try{ db.settings({ experimentalAutoDetectLongPolling: true, useFetchStreams: false, merge: true }); }
+try{ db.settings({ experimentalForceLongPolling: true, useFetchStreams: false, merge: true }); }
 catch(e){ console.warn('[fs] settings:', e && e.message); }
 
 // ── Offline kalıcılık + yazma kuyruğu: WiFi↔hücresel geçişinde yazıyı kaybetme,
@@ -2656,6 +2680,8 @@ function showView(name){
   if(name==='tools')loadMarketData();
   if(name==='memory')renderMemory();
   if(name==='trash')renderTrash();
+  /* mobil: görünüm değişince yan çekmeceyi kapat (drawer açık kalmasın) */
+  { const _sb=document.getElementById('sidebar'); if(_sb&&_sb.classList.contains('open')&&window.matchMedia('(max-width:768px)').matches){ _sb.classList.remove('open'); const _ov=document.getElementById('sidebar-overlay'); if(_ov)_ov.classList.remove('show'); } }
 }
 document.querySelectorAll('.sb-item[data-view]').forEach(el=>el.addEventListener('click',()=>showView(el.dataset.view)));
 
@@ -5858,13 +5884,24 @@ function toggleAgent(){
   if(open){
     if(!p.dataset.init){p.dataset.init='1';agentLoadMemory();if(typeof agentSetupDropPaste==='function')agentSetupDropPaste();
       const welcome='👋 Selam! Ben **UNICOTAI** — artık **görsel ve belge analizi** de yapabiliyorum 🎉\n\n👁️ **Görsel oku:** Fotoğraf/etiket/numune görselini 📎 ile ekle, yapıştır (Ctrl+V) ya da panele sürükle-bırak → içindeki metni, sayıları ve detayları okurum.\n📄 **PDF oku:** Normal PDF\'i metin olarak, **taranmış PDF\'i görsel OCR** ile okurum.\n📊 **Rapor hazırla & sun:** "rapor hazırla" / "pdf hazırla" de → markalı **PDF raporu** üretip indiririm.\n\nGeçmişimizi hatırlarım, UNICO bilgi tabanını kullanırım.\n\nÖrnekler:\n• Bir görsel ekleyip "bu görseli analiz et"\n• "Bu hafta hangi siparişler kritik?"\n• "Vadesi geçen faturalar için rapor hazırla"\n• "bilgi: ..." ile bana yeni şey öğret';
-      agentAddMsg(welcome,'bot');
+      agentAddMsg(welcome,'bot',null,true); // açılış mesajı sessiz — otomatik sesli konuşma yok
       updateAgentStatus();
     }
     updateAgentStatus();
     setTimeout(()=>document.getElementById('agent-input').focus(),200);
   }
 }
+// UNICO AI: panel açıkken panel/FAB dışına (boşluğa) tıklayınca kapat — X'e ek olarak
+document.addEventListener('click',function(e){
+  const panel=document.getElementById('agent-panel');
+  if(!panel||!panel.classList.contains('open'))return;
+  if(panel.contains(e.target))return;                                  // panel içi → kapatma
+  const fab=document.getElementById('agent-fab'); if(fab&&fab.contains(e.target))return; // FAB → toggleAgent zaten yönetir
+  if(e.target.closest&&e.target.closest('.modal-overlay'))return;      // panelden açılan modal → kapatma
+  if(document.querySelector('.modal-overlay.open'))return;             // açık modal varken kapatma
+  if(panel.classList.contains('live'))return;                         // canlı (JARVIS) sesli oturumu yanlışlıkla kapatma
+  toggleAgent();
+});
 function agentAddMsg(text,who,ts,silent){
   const box=document.getElementById('agent-messages');if(!box)return;
   const d=document.createElement('div');
@@ -7729,6 +7766,11 @@ function jarvisPlayPCM(ab,rate){
 }
 function jarvisStopPlayback(){_jarvis.sources.forEach(s=>{try{s.stop();}catch(_){}});_jarvis.sources=[];_jarvis.playTime=0;}
 async function startMicCapture(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    jarvisLog('system','🎙️ Mikrofon açılamıyor — sesli mod GÜVENLİ BAĞLANTI (HTTPS) gerektirir. Bu sayfa HTTP üzerinden açık ('+location.host+'); tarayıcı mikrofonu kapatır. Sesli kullanım için uygulamayı HTTPS\'te aç (ör. unicot.netlify.app). Gemini bağlantısı kuruldu — şimdilik yazarak konuşabilirsin.');
+    jarvisSetStatus('listening');
+    return;
+  }
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true}});
     _jarvis.micStream=stream;
