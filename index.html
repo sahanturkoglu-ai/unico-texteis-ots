@@ -45,27 +45,30 @@
 <script>if(typeof pdfjsLib!=='undefined'){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}</script>
 <script src="unico-keys.js" onerror="console.log('[UNICO] unico-keys.js bulunamadi — AI Ayarlari ile key girebilirsiniz')"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --primary:#1E40AF;--primary-light:#3B82F6;--accent:#D97706;--green:#10B981;--orange:#F59E0B;--red:#EF4444;
-  --bg:#F8FAFC;--card:rgba(255, 255, 255, 0.75);--text:#0C1117;--muted:#6B7280;--border:#DBEAFE;
-  --glass-bg:rgba(255, 255, 255, 0.85); --glass-border:rgba(255, 255, 255, 0.3); --glass-shadow:0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --primary:#F97316;--primary-light:#FB923C;--accent:#F97316;--green:#16A34A;--orange:#F59E0B;--red:#DC2626;
+  --bg:#F4F4F3;--card:#FFFFFF;--text:#0E0E0F;--muted:#78716C;--border:#E7E5E4;
+  --glass-bg:#FFFFFF; --glass-border:#E7E5E4; --glass-shadow:0 1px 2px rgba(12, 12, 14, 0.06);
   --sidebar-w:260px;
   /* Semantic colors for data-dense dashboard */
-  --success:#10B981;--warning:#D97706;--error:#DC2626;--info:#3B82F6;
+  --success:#16A34A;--warning:#D97706;--error:#DC2626;--info:#2563EB;--danger:#DC2626; /* var(--danger): rakip-sil çöp ikonu (L8492) + hata metni (L8607) kullanıyordu ama :root'ta tanımsızdı → renksiz kalıyordu; --red/--error ile aynı kırmızı */
+  --blue:#2563EB;--hover:#F1F5F9; /* prev-theme alias tokens: var(--blue)/var(--hover) dosyada kullanılıyordu ama :root'ta tanımsızdı → bozuk stilleri (info toast, aktif tab/dil, add-line) düzeltir */
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif; /* kurumsal birincil font — tüm metin (eski Fira Sans/Segoe UI karması birleştirildi) */
+  --font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace; /* tek mono font — kod/numara/logo (eski Fira Code/Consolas birleştirildi) */
   scroll-behavior:smooth;}
 }
 /* Respect user motion preferences */
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
-body{font-family:'Fira Sans',sans-serif;background:linear-gradient(rgba(8,8,8,0.45),rgba(8,8,8,0.72)), url('unico-elite-bg.png') no-repeat center center fixed;background-size:cover;color:var(--text);display:flex;height:100vh;overflow:hidden;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;}
 a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:2px;}
 #sidebar{width:var(--sidebar-w);background:linear-gradient(160deg, rgba(13,13,13,0.95) 0%, rgba(20,20,20,0.85) 100%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#fff;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;border-right:1px solid rgba(255,255,255,0.08);box-shadow:4px 0 24px rgba(0,0,0,0.2);}
 .sb-logo{padding:26px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.05);text-align:center;}
 .sb-logo-inner{display:flex;align-items:center;justify-content:center;gap:12px}
-.sb-logo h1{font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;line-height:1.2;background:linear-gradient(90deg, var(--accent), #F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'Fira Code',monospace;}
+.sb-logo h1{font-size:15px;font-weight:800;letter-spacing:1px;text-transform:uppercase;line-height:1.2;background:linear-gradient(90deg, var(--accent), #F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:var(--font-mono);}
 .sb-logo span{font-size:10.5px;color:rgba(255,255,255,0.6);display:block;margin-top:6px;letter-spacing:1.5px;font-weight:600;text-transform:uppercase}
 .sb-nav{padding:12px 0;flex:1}
 .sb-section{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);padding:18px 22px 8px;font-weight:700}
@@ -78,13 +81,13 @@ a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px s
 }
 .sb-item i{width:20px;text-align:center;font-size:14px;transition:transform .2s;}
 .sb-item:hover i{transform:scale(1.1);}
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:rgba(250,250,250,0.65);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
-#topbar{background:var(--glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--glass-border);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--glass-shadow);}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+#topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:none;}
 #topbar h2{font-size:18px;font-weight:800;letter-spacing:-0.5px;color:var(--text);}
 .tb-right{display:flex;align-items:center;gap:14px}
-.search-box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.6);border:2px solid var(--glass-border);border-radius:12px;padding:8px 14px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);transition:all 0.2s ease-out;}
-.search-box:focus-within{background:#fff;border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,64,175,0.1);}
-.search-box input{border:none;background:none;outline:none;font-size:13px;width:220px;color:var(--text);font-family:'Fira Sans',sans-serif;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 14px;transition:all 0.2s ease-out;}
+.search-box:focus-within{background:#fff;border-color:var(--primary);box-shadow:0 0 0 3px rgba(249,115,22,0.12);}
+.search-box input{border:none;background:none;outline:none;font-size:13px;width:220px;color:var(--text);font-family:var(--font);}
 .lang-switch{display:flex;background:rgba(255,255,255,0.6);border:1px solid var(--glass-border);border-radius:10px;overflow:hidden;padding:2px;}
 .lang-btn{padding:6px 12px;background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:var(--muted);transition:.2s;border-radius:8px;}
 .lang-btn:hover{color:var(--text);}
@@ -104,16 +107,16 @@ select:focus-visible,
   }
 }
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s ease-out;font-family:'Fira Sans',sans-serif;position:relative;overflow:hidden;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s ease-out;font-family:var(--font);position:relative;overflow:hidden;}
 .btn::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.2);border-radius:50%;transform:translate(-50%,-50%);transition:width 0.6s, height 0.6s;}
 .btn:active::after{width:200px;height:200px;opacity:0;}
-.btn-primary{background:linear-gradient(135deg, var(--primary), var(--primary-light));color:#fff;box-shadow:0 4px 15px rgba(30,64,175,0.4);}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(30,64,175,0.6);}@media (prefers-reduced-motion: reduce){.btn-primary:hover{transform:none;}}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.08);}.btn-primary:hover{filter:brightness(0.94);}
 .btn-success{background:linear-gradient(135deg, #10B981, #059669);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.4);}.btn-success:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(16,185,129,0.6);}
 .btn-danger{background:linear-gradient(135deg, #EF4444, #DC2626);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.4);}.btn-danger:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(239,68,68,0.6);}
 .btn-outline{background:rgba(255,255,255,0.7);border:1px solid rgba(217,119,6,0.3);color:#ea580c;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}.btn-outline:hover{background:#fff;border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 25px rgba(217,119,6,0.25);}
 .btn-sm{padding:5px 12px;font-size:12px;border-radius:8px;}
 /* Bağlantı/sync durum rozeti (cross-IP & mobil) */
-#sync-pill{position:fixed;right:12px;bottom:12px;z-index:1000;padding:6px 12px;border-radius:20px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.18);transition:opacity .4s, background .2s;pointer-events:none;font-family:'Fira Sans',sans-serif;}
+#sync-pill{position:fixed;right:12px;bottom:12px;z-index:1000;padding:6px 12px;border-radius:20px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.18);transition:opacity .4s, background .2s;pointer-events:none;font-family:var(--font);}
 @media(max-width:480px){#sync-pill{right:8px;bottom:8px;font-size:11px;padding:5px 10px;}}
 #content{flex:1;overflow-y:auto;padding:28px;}
 .view{display:none;animation:fadeIn 0.3s ease-out;}.view.active{display:block;}
@@ -124,17 +127,17 @@ select:focus-visible,
   @keyframes shimmer{0%{background-position:0}100%{background-position:0}}
 }
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:20px;margin-bottom:28px}
-.stat-card{background:var(--glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:18px;padding:24px;border:1px solid var(--glass-border);box-shadow:0 8px 32px 0 rgba(31, 38, 135, 0.05);transition:all 0.3s ease-out;position:relative;overflow:hidden;outline:2px solid transparent;outline-offset:2px;}
-.stat-card:focus-within{outline-color:var(--primary);outline-offset:4px;box-shadow:0 20px 40px rgba(30,64,175,0.2);}
+.stat-card{background:#fff;border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,0.05);transition:box-shadow 0.2s ease-out;position:relative;overflow:hidden;outline:2px solid transparent;outline-offset:2px;}
+.stat-card:focus-within{outline-color:var(--primary);outline-offset:4px;box-shadow:0 20px 40px rgba(249,115,22,0.18);}
 @media (prefers-reduced-motion: reduce){.stat-card{transition:none;}}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:radial-gradient(circle at top right, rgba(217,119,6,0.1), transparent 70%);opacity:0;transition:opacity 0.2s ease-out;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:100%;background:transparent;opacity:0;transition:opacity 0.2s ease-out;}
 .stat-card:hover::before{opacity:1;}
-.stat-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 12px 24px rgba(30,64,175,0.15);border-color:rgba(30,64,175,0.3);}
+.stat-card:hover{box-shadow:0 6px 20px -8px rgba(0,0,0,0.12);border-color:#e0ddda;}
 @media (prefers-reduced-motion: reduce){
   .stat-card:hover { transform: none; }
 }
 .stat-card .label{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:600;}
-.stat-card .value{font-size:28px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg, var(--primary), var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:none;}
+.stat-card .value{font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--text);transition:none;}
 .stat-card:hover .value{filter:saturate(1.1);}
 .stat-card .sub{font-size:11.5px;color:var(--muted);margin-top:6px;font-weight:500;}
 .stat-card.clickable{cursor:pointer;}
@@ -159,12 +162,12 @@ select:focus-visible,
 .table-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap}
 .table-wrap{background:var(--glass-bg);backdrop-filter:blur(16px);border-radius:16px;border:1px solid var(--glass-border);overflow-x:auto;-webkit-overflow-scrolling:touch;box-shadow:var(--glass-shadow);}
 table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;font-variant-numeric:tabular-nums;}
-th{background:rgba(30,64,175,0.08);padding:12px 16px;text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--primary);border-bottom:2px solid var(--primary);white-space:nowrap;font-weight:700;position:sticky;top:0;z-index:10;}
+th{background:#FAF9F8;padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-weight:600;position:sticky;top:0;z-index:10;}
 th:first-child{border-top-left-radius:12px;}
 th:last-child{border-top-right-radius:12px;}
 td{padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;font-weight:500;transition:background-color 0.15s;}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(30,64,175,0.05);}
+tr:hover td{background:rgba(249,115,22,0.06);}
 tbody tr:focus-within{outline:2px solid var(--primary);outline-offset:-1px;}
 .actions{display:flex;gap:6px}
 .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.3px;cursor:pointer;}
@@ -194,8 +197,8 @@ tbody tr:focus-within{outline:2px solid var(--primary);outline-offset:-1px;}
 @keyframes slideDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .form-help{font-size:11.5px;color:var(--muted);font-weight:400;margin-top:2px;}
 label{font-size:12.5px;font-weight:600;color:var(--muted)}
-input,select,textarea{border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:10px 14px;font-size:13.5px;outline:none;transition:all .2s;font-family:'Fira Sans',sans-serif;color:var(--text);width:100%;background:#F8FAFC;}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(30,64,175,.1);background:#fff;}
+input,select,textarea{border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:10px 14px;font-size:13.5px;outline:none;transition:all .2s;font-family:var(--font);color:var(--text);width:100%;background:#F8FAFC;}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(249,115,22,.12);background:#fff;}
 input:disabled,select:disabled,textarea:disabled{opacity:0.6;cursor:not-allowed;background-color:#F1F5F9;}
 button:disabled{opacity:0.6;cursor:not-allowed;}
 .btn-loading{display:inline-flex;align-items:center;gap:8px;}
@@ -218,6 +221,15 @@ textarea{resize:vertical;min-height:70px}
 .toast.error{background:linear-gradient(135deg, var(--red), #DC2626);border:1px solid rgba(255,255,255,0.2);}
 .toast.info{background:linear-gradient(135deg, var(--blue), #EA580C);border:1px solid rgba(255,255,255,0.2);}
 @keyframes slideIn{from{transform:translateX(100px) scale(0.9);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
+/* PDF yükleme overlay'i — tüm ağır PDF akışlarında ortak (mobil + masaüstü) */
+#pdf-loading{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:24px}
+#pdf-loading.show{display:flex}
+#pdf-loading .pdf-load-card{background:#fff;border-radius:18px;padding:30px 34px;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;gap:16px;max-width:320px;width:calc(100% - 48px);text-align:center}
+#pdf-loading .pdf-spinner{width:52px;height:52px;border-radius:50%;border:5px solid rgba(249,115,22,.18);border-top-color:var(--primary);animation:pdfSpin .8s linear infinite}
+#pdf-loading .pdf-load-text{font-size:15.5px;font-weight:700;color:#0D0D0D}
+#pdf-loading .pdf-load-sub{font-size:12px;color:#6b7280;margin-top:-6px}
+@keyframes pdfSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){#pdf-loading .pdf-spinner{animation:none}}
 .tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid rgba(0,0,0,0.06);padding-bottom:2px;}
 .tab{padding:10px 20px;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-5px;transition:all .2s;border-radius:8px 8px 0 0;}
 .tab:hover{color:var(--text);background:rgba(0,0,0,0.02);}
@@ -227,9 +239,9 @@ textarea{resize:vertical;min-height:70px}
 /* Scrollbar styling */
 ::-webkit-scrollbar{width:8px;height:8px;}
 ::-webkit-scrollbar-track{background:rgba(0,0,0,0.02);}
-::-webkit-scrollbar-thumb{background:rgba(30,64,175,0.3);border-radius:4px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(30,64,175,0.5);}
-scrollbar-color:rgba(30,64,175,0.3) rgba(0,0,0,0.02);
+::-webkit-scrollbar-thumb{background:rgba(120,113,108,0.4);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(120,113,108,0.6);}
+scrollbar-color:rgba(120,113,108,0.4) rgba(0,0,0,0.02);
 scrollbar-width:thin;
 /* Checkbox */
 .chk-col{width:40px;text-align:center}
@@ -336,7 +348,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 #agent-panel.live #agent-header .header-title,#agent-panel.live #agent-header .header-sub,#agent-panel.live #agent-status,#agent-panel.live #agent-header-actions button{color:#cfe8ff}
 #agent-mic.live-on{background:#dc2626!important;color:#fff!important;animation:jpulse 1.4s infinite}
 /* ═══════════════ UNICOTAI CANLI — JARVIS HUD ═══════════════ */
-#jarvis-hud{position:fixed;inset:0;z-index:10000;background:radial-gradient(1200px 600px at 50% -8%,#0b1220,#05070d 62%);color:#cfe8ff;display:none;flex-direction:column;align-items:center;font-family:ui-monospace,'JetBrains Mono',Consolas,monospace}
+#jarvis-hud{position:fixed;inset:0;z-index:10000;background:radial-gradient(1200px 600px at 50% -8%,#0b1220,#05070d 62%);color:#cfe8ff;display:none;flex-direction:column;align-items:center;font-family:var(--font-mono)}
 #jarvis-hud.open{display:flex;animation:jhIn .35s ease}
 @keyframes jhIn{from{opacity:0}to{opacity:1}}
 #jarvis-hud .jh-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(56,189,248,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.06) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;-webkit-mask-image:radial-gradient(circle at 50% 28%,#000,transparent 75%);mask-image:radial-gradient(circle at 50% 28%,#000,transparent 75%)}
@@ -522,7 +534,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 .cari-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:.18s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .cari-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(217,119,6,.15);border-color:var(--accent)}
 .cari-card .name{font-weight:800;font-size:14px;color:var(--text);margin-bottom:4px}
-.cari-card .vkn{font-size:11px;color:var(--muted);font-family:monospace}
+.cari-card .vkn{font-size:11px;color:var(--muted);font-family:var(--font-mono)}
 .cari-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px}
 .cari-row:last-child{border-bottom:none}
 .cari-row .lbl{color:var(--muted)}
@@ -637,9 +649,11 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
     <div class="sb-section" data-i18n="sec_general">Genel</div>
     <div class="sb-item active" data-view="dashboard"><i class="fa fa-chart-pie"></i> <span data-i18n="dashboard">Dashboard</span></div>
     <div class="sb-section" data-i18n="sec_ops">Operasyon</div>
+    <div class="sb-item" data-view="panel"><i class="fa fa-table-columns"></i> <span data-i18n="panel">Üretim Panosu</span> <span style="font-size:9px;background:var(--accent);color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">YENİ</span></div>
     <div class="sb-item" data-view="orders"><i class="fa fa-clipboard-list"></i> <span data-i18n="orders">Siparişler</span></div>
     <div class="sb-item" data-view="lots"><i class="fa fa-flask"></i> <span data-i18n="lots">Lab Çalışmalarım</span></div>
     <div class="sb-item" data-view="shipments"><i class="fa fa-ship"></i> <span data-i18n="shipments">Sevkiyatlar</span></div>
+    <div class="sb-item" data-view="loadings"><i class="fa fa-chart-column"></i> <span data-i18n="loadings">Yüklemelerim</span> <span style="font-size:9px;background:var(--accent);color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">YENİ</span></div>
     <div class="sb-section" data-i18n="sec_finance">Finans</div>
     <div class="sb-item" data-view="invoices"><i class="fa fa-file-invoice-dollar"></i> <span data-i18n="invoices">Faturalar</span></div>
     <div class="sb-item" data-view="customers"><i class="fa fa-id-card"></i> <span data-i18n="customers">Cari Kartlar</span></div>
@@ -680,6 +694,46 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
   <div id="content">
 
     <!-- DASHBOARD -->
+    <div class="view" id="view-panel">
+      <style>
+        .kanban-board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:8px}
+        .kcol{flex:1;min-width:248px;display:flex;flex-direction:column;gap:10px}
+        .kcol-h{display:flex;align-items:center;gap:8px;padding:2px 4px}
+        .kcol-h .kdot{width:9px;height:9px;border-radius:50%}
+        .kcol-h b{font-size:13px;font-weight:700;color:var(--text)}
+        .kcol-h .kcnt{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);background:rgba(0,0,0,.05);padding:2px 9px;border-radius:20px}
+        .klane{background:rgba(0,0,0,.04);border-radius:13px;padding:9px;display:flex;flex-direction:column;gap:9px;min-height:120px}
+        .kcard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 12px;box-shadow:0 1px 2px rgba(0,0,0,.05);cursor:pointer;transition:box-shadow .15s,transform .15s}
+        .kcard:hover{box-shadow:0 6px 20px -6px rgba(0,0,0,.18);transform:translateY(-1px)}
+        .kr1{display:flex;align-items:center;justify-content:space-between;gap:8px}
+        .klot{font-size:13px;font-weight:700;color:var(--text)}
+        .kcust{font-size:11.5px;color:var(--muted);margin-top:5px}
+        .kcol2{font-size:12px;color:var(--text);margin-top:6px}
+        .kr4{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+        .kqty{font-size:12.5px;font-weight:700;color:var(--text)}
+        .kphase{font-size:10.5px;color:var(--muted)}
+        .kempty{color:var(--muted);font-size:12px;text-align:center;padding:14px 0}
+        .panel-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+      </style>
+      <div class="panel-toolbar">
+        <div style="font-weight:600;color:var(--muted);font-size:13px">Canlı üretim hattı · 4 aşama · sipariş bazlı</div>
+        <button class="btn" style="margin-left:auto" onclick="showView('orders')"><i class="fa fa-table"></i> Tablo Görünümü</button>
+        <button class="btn" style="background:var(--accent);color:#fff;border-color:var(--accent)" onclick="openOrderModal()"><i class="fa fa-plus"></i> Yeni Sipariş</button>
+      </div>
+      <div id="panel-board" class="kanban-board"></div>
+    </div>
+    <div class="view" id="view-loadings">
+      <div class="panel-toolbar">
+        <div style="font-weight:600;color:var(--muted);font-size:13px">Geçmiş yükleme analizi · gerçek sevkiyat verisi</div>
+        <button class="btn" style="margin-left:auto" onclick="showView('shipments')"><i class="fa fa-ship"></i> Sevkiyatlar</button>
+      </div>
+      <div id="load-kpis" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:16px"></div>
+      <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="stat-card" style="padding:16px"><div style="font-weight:700;font-size:14px;margin-bottom:12px">Aylık Yükleme Adedi</div><div style="position:relative;height:260px"><canvas id="load-bar"></canvas></div></div>
+        <div class="stat-card" style="padding:16px"><div style="font-weight:700;font-size:14px;margin-bottom:12px">Müşteriye Göre</div><div style="position:relative;height:260px"><canvas id="load-cust"></canvas></div></div>
+      </div>
+      <div class="stat-card" style="padding:0;overflow:hidden"><div style="font-weight:700;font-size:14px;padding:15px 18px;border-bottom:1px solid var(--border)">Son Yüklemeler</div><div id="load-table"></div></div>
+    </div>
     <div class="view active" id="view-dashboard">
       <div id="loading-alerts"></div>
 
@@ -727,7 +781,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
       <div class="dash-grid">
         <div class="dash-card">
           <h3><span data-i18n="recentOrders">Son Siparişler</span> <span onclick="showView('orders')" data-i18n="seeAll">Tümü →</span></h3>
-          <table><thead><tr><th>No</th><th>Müşteri</th><th>Miktar</th><th>Durum</th></tr></thead><tbody id="dash-recent-orders"></tbody></table>
+          <div style="overflow-x:auto"><table><thead><tr><th style="width:44px">Görsel</th><th>No</th><th>Müşteri</th><th>Miktar</th><th>Durum</th></tr></thead><tbody id="dash-recent-orders"></tbody></table></div>
         </div>
         <div class="dash-card">
           <h3><span data-i18n="activeShipments">Aktif Sevkiyatlar</span> <span onclick="showView('shipments')" data-i18n="seeAll">Tümü →</span></h3>
@@ -890,7 +944,6 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
       <div class="table-header">
         <div class="filters"><input placeholder="Katalogda ara (ürün, renk, pantone)..." id="cat-search" oninput="renderCatalog()" style="width:260px"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-outline btn-sm" onclick="syncCatalogFromOrders()"><i class="fa fa-rotate"></i> Siparişlerden Topla</button>
           <button class="btn btn-outline btn-sm" onclick="openProductModal()"><i class="fa fa-plus"></i> Yeni Ürün</button>
           <button class="btn btn-primary btn-sm" onclick="openColorModal()"><i class="fa fa-plus"></i> Yeni Renk/Pantone</button>
         </div>
@@ -1550,7 +1603,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 .ag-desc{font-size:11px;color:#6B7280;margin-top:3px;line-height:1.5}
 .ag-desc a{font-weight:700;text-decoration:none}
 .ag-key-row{display:flex;gap:6px;margin-top:9px;align-items:center}
-.ag-key-row input{flex:1;font-family:monospace;font-size:12px;padding:7px 10px;border:1px solid rgba(0,0,0,.12);border-radius:9px;background:rgba(255,255,255,.85);transition:.2s}
+.ag-key-row input{flex:1;font-family:var(--font-mono);font-size:12px;padding:7px 10px;border:1px solid rgba(0,0,0,.12);border-radius:9px;background:rgba(255,255,255,.85);transition:.2s}
 .ag-key-row input:focus{outline:none;border-color:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.14)}
 .ag-sel{width:100%;margin-top:7px;font-size:12px;padding:7px 10px;border:1px solid rgba(0,0,0,.12);border-radius:9px;background:rgba(255,255,255,.85)}
 .ag-sel:focus{outline:none;border-color:#10B981}
@@ -1927,7 +1980,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
       <div style="margin:16px 0 8px;font-size:13px;font-weight:700">Fatura Kalemleri (PDF'den giriniz)</div>
       <div id="inv-lines"></div>
       <button class="add-line-btn" onclick="addInvLine()"><i class="fa fa-plus-circle"></i> Kalem Ekle</button>
-      <div style="margin-top:12px;text-align:right;font-size:14px;font-weight:700;color:var(--navy)" id="inv-modal-total">Toplam: 0.00</div>
+      <div style="margin-top:12px;text-align:right;font-size:14px;font-weight:700;color:var(--text)" id="inv-modal-total">Toplam: 0.00</div>
 
       <div class="form-group full" style="margin-top:14px">
         <label>📎 Fatura PDF'i / Dosya Ekle (yüklenince metni otomatik okur)</label>
@@ -1980,7 +2033,7 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
       </label>
       <div id="login-err" style="font-size:12px;color:var(--red);display:none;text-align:center;padding:4px"></div>
       <button class="btn btn-primary" id="login-btn" onclick="doLogin()" style="justify-content:center;padding:10px;margin-top:4px">Giriş Yap</button>
-      <div id="login-debug" style="font-size:10.5px;color:#6B7280;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:6px;padding:6px 8px;margin-top:6px;max-height:120px;overflow:auto;font-family:'Consolas',monospace;display:none;white-space:pre-wrap;word-break:break-all"></div>
+      <div id="login-debug" style="font-size:10.5px;color:#6B7280;background:#F3F4F6;border:1px solid #E5E7EB;border-radius:6px;padding:6px 8px;margin-top:6px;max-height:120px;overflow:auto;font-family:var(--font-mono);display:none;white-space:pre-wrap;word-break:break-all"></div>
     </div>
   </div>
 </div>
@@ -2054,7 +2107,18 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
 
 <div id="toast"></div>
 
+<!-- PDF üretimi (jsPDF + html2canvas) ağır olduğundan, indirme sırasında gösterilen ortak yükleme overlay'i -->
+<div id="pdf-loading" role="alert" aria-live="assertive" aria-hidden="true">
+  <div class="pdf-load-card">
+    <div class="pdf-spinner"></div>
+    <div class="pdf-load-text" id="pdf-loading-text">PDF hazırlanıyor…</div>
+    <div class="pdf-load-sub" id="pdf-loading-sub">Birkaç saniye sürebilir</div>
+  </div>
+</div>
+
 <script>
+// Grafik metinlerini de kurumsal fonta (Inter) eşitle — Chart.js L34'te zaten yüklü
+if(typeof Chart!=='undefined'){try{Chart.defaults.font.family="'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif";}catch(_){}}
 // ═══════════════════════════════════════════════════════════════
 // FIREBASE YAPILANDIRMASI — Aşağıdaki değerleri Firebase Console'dan kopyalayın
 // console.firebase.google.com → Proje → Project Settings → Web App → Config
@@ -2381,6 +2445,8 @@ const I18N={
     tools:'Piyasa / Kurlar',memory:'UNICOAI-MEMORY',trash:'Çöp Kutusu',
     exportAll:'Tümünü Export Et',excelImport:'Excel Import',obsidian:"Obsidian'a Aktar",logout:'Çıkış Yap',
     searchPh:'Sipariş, B/L, fatura ara...',
+    // Yeni görünümler (panel/loadings)
+    panel:'Üretim Panosu',loadings:'Yüklemelerim',
     // Dashboard
     totalOrders:'Toplam Sipariş Tutarı',production:'Üretim/Hazırlık',demandPay:'Talep Edilecek Ödeme',
     collected:'Tahsil Edilen',labPending:'Lab Onay Bekleyen',activeShip:'Aktif Sevkiyat',
@@ -2401,7 +2467,9 @@ const I18N={
     newCustomer:'Yeni Cari',bulkDelete:'Seçilenleri Sil',allStatuses:'Tüm Durumlar',
     save:'Kaydet',cancel:'İptal',edit:'Düzenle',del:'Sil',
     excelIO:'Excel Import/Export',
-    refresh:'Yenile'
+    refresh:'Yenile',
+    pdf_generating:'PDF hazırlanıyor…',
+    pdf_generating_sub:'Birkaç saniye sürebilir'
   },
   en:{
     sec_general:'General',sec_ops:'Operations',sec_finance:'Finance',sec_tools:'Tools',sec_account:'Account',
@@ -2410,6 +2478,8 @@ const I18N={
     tools:'Market / Rates',memory:'UNICOAI-MEMORY',trash:'Trash',
     exportAll:'Export All',excelImport:'Excel Import',obsidian:'Export to Obsidian',logout:'Logout',
     searchPh:'Search order, B/L, invoice...',
+    // New views (panel/loadings)
+    panel:'Production Board',loadings:'My Loadings',
     totalOrders:'Total Order Value',production:'Production/Prep',demandPay:'Payment to Request',
     collected:'Collected',labPending:'Lab Approval Pending',activeShip:'Active Shipment',
     financialStatus:'Financial Status',netPosition:'Net Position',
@@ -2427,7 +2497,9 @@ const I18N={
     newCustomer:'New Customer',bulkDelete:'Delete Selected',allStatuses:'All Statuses',
     save:'Save',cancel:'Cancel',edit:'Edit',del:'Delete',
     excelIO:'Excel Import/Export',
-    refresh:'Refresh'
+    refresh:'Refresh',
+    pdf_generating:'Generating PDF…',
+    pdf_generating_sub:'This may take a few seconds'
   }
 };
 function T(k){return (I18N[LANG]&&I18N[LANG][k])||I18N.tr[k]||k;}
@@ -2487,6 +2559,7 @@ function getOrderTotal(o){return(o.lines||[]).reduce((s,l)=>s+(parseFloat(l.qty)
 function normName(s){return (s||'').toString().trim().replace(/\s+/g,' ').toLocaleLowerCase('tr-TR');}
 function findCustomerByName(n){const k=normName(n);if(!k)return null;return (DB.customers||[]).find(c=>normName(c.name)===k)||null;}
 function escAttr(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escHtml(s){return escAttr(s);} // HTML metin kaçışı (& " < >). Kod genelinde escHtml() çağrılıyordu ama tanımsızdı (catalog/fatura/prospect/market satırlarını kırıyordu) — eklendi.
 // #6 — bir siparişin gerçek maliyeti = ona bağlı Alış + Gider faturalarının toplamı
 function getOrderCost(o){return (DB.invs||[]).filter(i=>(i.type==='Alış'||i.type==='Gider')&&(i.orderId===o.number||i.orderId===o.id)).reduce((s,i)=>s+getInvTotal(i),0);}
 function getInvTotal(i){return(i.lines||[]).reduce((s,l)=>s+(parseFloat(l.qty)||0)*(parseFloat(l.price)||0),0);}
@@ -2623,13 +2696,15 @@ async function exportBalanceSheetPDF(){
   const target=document.getElementById('bal-capture');
   if(!target){toast('Bilanço bulunamadı','error');return;}
   toast('PDF hazırlanıyor...','info');
+  showPdfLoading();
+  await pdfPaintTick();
   try{
     // Chart'ı animasyonsuz + eksiksiz çiz (yarım yakalama / yeniden-yükleme önlenir)
     if(typeof Chart!=='undefined'&&balChartInst){ try{balChartInst.update('none');}catch(_){ } }
     const logo=await getBrandLogoPNG(120);
     await new Promise(r=>setTimeout(r,250));
     const {jsPDF}=window.jspdf;
-    const canvas=await html2canvas(target,{scale:3,backgroundColor:'#ffffff',useCORS:true,logging:false});
+    const canvas=await html2canvas(target,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false});
     const pdf=new jsPDF('p','mm','a4');
     const pageW=pdf.internal.pageSize.getWidth();
     const pageH=pdf.internal.pageSize.getHeight();
@@ -2642,19 +2717,27 @@ async function exportBalanceSheetPDF(){
     pdf.setFontSize(9); pdf.setTextColor(120,120,120);
     pdf.text((y?('Dönem: '+y):'Tüm yıllar')+' · '+today(),tx,20);
     // ── İçerik: çok sayfalı (uzun bilanço tek sayfaya sığmazsa alt kısım kesilmesin) ──
-    const imgData=canvas.toDataURL('image/png');
+    const imgData=canvas.toDataURL('image/jpeg',0.92);
     const imgW=pageW-20, imgH=canvas.height*imgW/canvas.width;
     const topY=26;
-    pdf.addImage(imgData,'PNG',10,topY,imgW,imgH);
+    // Boyut düşüşü scale:3→2 + PNG→JPEG'den gelir. alias+FAST standart pratik (görüntü bir kez gömülür; bu jsPDF zaten dedup ediyor ama zarar yok).
+    pdf.addImage(imgData,'JPEG',10,topY,imgW,imgH,'bal','FAST');
     let rendered=pageH-topY;
     while(rendered<imgH){
       pdf.addPage();
-      pdf.addImage(imgData,'PNG',10,-rendered,imgW,imgH);
+      pdf.addImage(imgData,'JPEG',10,-rendered,imgW,imgH,'bal','FAST');
       rendered+=pageH;
     }
-    pdf.save('UNICOT_Bilanco_'+(y||'tum')+'_'+today()+'.pdf');
+    // Güvenli indirme: blob + explicit download adı (jsPDF .save büyük dosyada bazen GUID isim/uzantısız indiriyordu)
+    const fname='UNICOT_Bilanco_'+(y||'tum')+'_'+today()+'.pdf';
+    const blob=pdf.output('blob');
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=fname; a.rel='noopener';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
     toast('Bilanço PDF indirildi','success');
   }catch(e){toast('PDF hatası: '+e.message,'error');}
+  finally{hidePdfLoading();}
 }
 const SB={Beklemede:'badge-orange',Onaylı:'badge-green',Üretimde:'badge-blue','Sevk Edildi':'badge-purple','Ön Ödeme Alındı':'badge-green',Tamamlandı:'badge-green',İptal:'badge-red',Hazırlanıyor:'badge-orange',Yüklendi:'badge-blue',Yolda:'badge-purple','Teslim Edildi':'badge-green',Reddedildi:'badge-red','Kısmen Ödendi':'badge-orange',Ödendi:'badge-green',Gecikmiş:'badge-red'};
 function badge(t){return`<span class="badge ${SB[t]||'badge-gray'}">${t||'—'}</span>`;}
@@ -2668,6 +2751,8 @@ function showView(name){
   if(el)el.classList.add('active');
   document.getElementById('page-title').textContent=T(name)||titles[name]||name;
   if(name==='dashboard')renderDashboard();
+  if(name==='panel')renderPanel();
+  if(name==='loadings')renderLoadings();
   if(name==='orders')renderOrders();
   if(name==='lots')renderLots();
   if(name==='shipments')renderShipments();
@@ -2684,6 +2769,90 @@ function showView(name){
   { const _sb=document.getElementById('sidebar'); if(_sb&&_sb.classList.contains('open')&&window.matchMedia('(max-width:768px)').matches){ _sb.classList.remove('open'); const _ov=document.getElementById('sidebar-overlay'); if(_ov)_ov.classList.remove('show'); } }
 }
 document.querySelectorAll('.sb-item[data-view]').forEach(el=>el.addEventListener('click',()=>showView(el.dataset.view)));
+
+/* === Yüklemelerim — geçmiş yükleme analizi, mevcut DB.ships verisinden === */
+function renderLoadings(){
+  const pt=document.getElementById('page-title'); if(pt)pt.textContent=T('loadings')||'Yüklemelerim';
+  const ships=DB.ships||[];
+  const custOf=(s)=>{ const o=(DB.orders||[]).find(o=>o.number===s.orderId||o.id===s.orderId); return o?o.customer:(s.destCountry||'—'); };
+  const MTR=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const monthly=new Array(12).fill(0); const byCust={}; const countries=new Set(); const carriers=new Set();
+  const now=new Date(); let thisMonth=0;
+  ships.forEach(s=>{
+    const d=s.loadingDate||s.eta;
+    if(d){ const dt=new Date(d); if(!isNaN(dt)){ monthly[dt.getMonth()]++; if(dt.getMonth()===now.getMonth()&&dt.getFullYear()===now.getFullYear())thisMonth++; } }
+    const c=custOf(s); byCust[c]=(byCust[c]||0)+1;
+    if(s.destCountry)countries.add(s.destCountry); if(s.carrier)carriers.add(s.carrier);
+  });
+  const kEl=document.getElementById('load-kpis');
+  if(kEl)kEl.innerHTML=[
+    ['fa-box','#fff2e8','#ea580c','Toplam Yükleme',ships.length],
+    ['fa-calendar-day','#e8effd','#2563eb','Bu Ay',thisMonth],
+    ['fa-earth-europe','#e0f2f0','#0d9488','Ülke',countries.size],
+    ['fa-truck','#e6f6ec','#16a34a','Taşıyıcı',carriers.size]
+  ].map(k=>`<div class="stat-card"><div class="label"><i class="fa ${k[0]}" style="background:${k[1]};color:${k[2]};width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;margin-right:8px"></i>${k[3]}</div><div class="value">${k[4]}</div></div>`).join('');
+  const recent=ships.slice().sort((a,b)=>new Date(b.loadingDate||b.eta||0)-new Date(a.loadingDate||a.eta||0)).slice(0,6);
+  const tEl=document.getElementById('load-table');
+  if(tEl)tEl.innerHTML=`<div style="overflow-x:auto"><table><thead><tr><th>Sevkiyat</th><th>Müşteri</th><th>Güzergah</th><th>Yükleme</th><th>Durum</th></tr></thead><tbody>${recent.length?recent.map(s=>`<tr><td><strong>${s.number||s.bl||'—'}</strong></td><td>${custOf(s)}</td><td>${(s.originPort||'—')} → ${(s.destPort||s.destCountry||'—')}</td><td>${fmtDate(s.loadingDate||s.eta)}</td><td>${badge(s.status)}</td></tr>`).join(''):`<tr><td colspan="5" style="padding:30px;text-align:center;color:var(--muted)">Yükleme kaydı yok</td></tr>`}</tbody></table></div>`;
+  if(window._loadBar)window._loadBar.destroy();
+  if(window._loadCust)window._loadCust.destroy();
+  const bc=document.getElementById('load-bar'), dc=document.getElementById('load-cust');
+  if(bc)window._loadBar=new Chart(bc,{type:'bar',data:{labels:MTR,datasets:[{data:monthly,backgroundColor:'#f97316',borderRadius:5,barPercentage:.62}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#a8a29e',font:{size:11}}},y:{grid:{color:'#eceae8'},ticks:{color:'#a8a29e',font:{size:11}}}}}});
+  if(dc){const ck=Object.keys(byCust),cv=Object.values(byCust);window._loadCust=new Chart(dc,{type:'doughnut',data:{labels:ck.length?ck:['—'],datasets:[{data:cv.length?cv:[1],backgroundColor:['#f97316','#2563eb','#0d9488','#7c3aed','#64748b','#d6d3d1'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'64%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,boxHeight:9,font:{size:11},color:'#0e0e0f',padding:10,usePointStyle:true}}}}});}
+}
+
+/* === Üretim Panosu (kanban) — SİPARİŞ bazlı, 4 aşama (order.status'tan türetilir).
+   KARAR KİLİTLİ (Sahan 2026-06-03): kart=sipariş, kolon=order.status. Detay: _dev_notes/PLANLAMA-eslesme-matrisi.md §3.
+   Sipariş=Beklemede · Lab&Kalite=Onaylı/Ön Ödeme Alındı · Üretim=Üretimde · Sevkiyat=Sevk Edildi/Tamamlandı · İptal=gizli. === */
+function renderPanel(){
+  const pt=document.getElementById('page-title'); if(pt)pt.textContent=T('panel')||'Üretim Panosu';
+  // Her SİPARİŞ tek kart; kolon order.status'tan türetilir. Kart içinde lot özeti gösterilir.
+  const STAGES=[
+    {n:'Sipariş',d:'#64748b',st:['Beklemede']},
+    {n:'Lab & Kalite Onayı',d:'#2563eb',st:['Onaylı','Ön Ödeme Alındı']},
+    {n:'Üretim (Boyama+Örme)',d:'#f97316',st:['Üretimde']},
+    {n:'Sevkiyat',d:'#0d9488',st:['Sevk Edildi','Tamamlandı']}
+  ];
+  const stageOf=(o)=>{
+    const s=o.status||'Beklemede';
+    for(let i=0;i<STAGES.length;i++){ if(STAGES[i].st.includes(s))return i; }
+    return 0; // tanımsız durum → Sipariş
+  };
+  // lot bağlantısı number||id ile eşleştirilir (kırılgan join düzeltildi)
+  const lotsOf=(o)=>(DB.lots||[]).filter(l=>l.orderId===o.number||l.orderId===o.id);
+  const nowD=new Date();nowD.setHours(0,0,0,0);
+  const board=document.getElementById('panel-board'); if(!board)return;
+  const orders=(DB.orders||[]).filter(o=>o.status!=='İptal');
+  board.innerHTML=STAGES.map((s,si)=>{
+    const cards=orders.filter(o=>stageOf(o)===si);
+    return `<div class="kcol">
+      <div class="kcol-h"><span class="kdot" style="background:${s.d}"></span><b>${s.n}</b><span class="kcnt">${cards.length}</span></div>
+      <div class="klane">${cards.map(o=>{
+        const lots=lotsOf(o);
+        const ok=lots.filter(l=>l.labStatus==='Onaylı').length;
+        const rej=lots.filter(l=>l.labStatus==='Reddedildi').length;
+        const wait=lots.length-ok-rej;
+        const lotSummary=lots.length
+          ? `<span class="kphase">${lots.length} lot · <span style="color:#16A34A;font-weight:700">●${ok}</span> <span style="color:#D97706;font-weight:700">●${wait}</span>${rej?` <span style="color:#DC2626;font-weight:700">●${rej}</span>`:''}</span>`
+          : `<span class="kphase">lot yok</span>`;
+        const chips=lots.slice(0,3).map(l=>((l.color||(l.colors&&l.colors[0]&&l.colors[0].name)||'').toString().trim())).filter(Boolean);
+        const colorChips=chips.join(' · ')+(lots.length>3?` +${lots.length-3}`:'');
+        const qty=(o.lines||[]).reduce((a,l)=>a+(parseFloat(l.qty)||0),0);
+        const amt=getOrderTotal(o);
+        const dd=o.loadingDate?Math.ceil((new Date(o.loadingDate)-nowD)/864e5):null;
+        const shipped=['Sevk Edildi','Tamamlandı'].includes(o.status);
+        const urgentBadge=(dd!==null&&!shipped)?(dd<0?` <span class="due-badge due-overdue">gecikti</span>`:dd<=7?` <span class="due-badge due-soon">${dd}g</span>`:''):'';
+        return `<div class="kcard" onclick="openOrderModal('${o.id}')">
+          <div class="kr1"><span class="klot">${o.number||'—'}</span>${badge(o.status)}</div>
+          <div class="kcust">${o.customer||'—'}${o.customerCountry?` <span style="opacity:.7">· ${o.customerCountry}</span>`:''}</div>
+          <div class="kcol2">${colorChips||'—'}</div>
+          <div class="kr4"><span class="kqty">${qty.toLocaleString()} m${amt?` · ${fmt(amt)} ${o.currency||'EUR'}`:''}</span>${lotSummary}</div>
+          ${o.loadingDate?`<div class="kphase" style="margin-top:6px">Yükleme: ${fmtDate(o.loadingDate)}${urgentBadge}</div>`:''}
+        </div>`;
+      }).join('')||'<div class="kempty">—</div>'}</div>
+    </div>`;
+  }).join('');
+}
 
 let finChartInst=null;
 function renderDashboard(){
@@ -2831,7 +3000,7 @@ function renderDashboard(){
       <td style="font-weight:700;white-space:nowrap">${fmt(i.amt)} ${i.currency}</td>
       <td style="white-space:nowrap;${isOv?'color:#DC2626;font-weight:700':isSn?'color:#D97706;font-weight:700':''}">${fmtDate(i.dueDate)||'—'} ${isOv?'<span class="due-badge due-overdue">GECİKMİŞ</span>':isSn?`<span class="due-badge due-soon">${dd}g</span>`:''}</td>
       <td>${badge(i.payStatus)}</td></tr>`;
-  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--muted)">Bekleyen alacak yok ✓</td></tr>';
+  }).join(''):'<tr><td colspan="5"><div class="empty-state"><i class="fa fa-coins"></i>Bekleyen alacak yok ✓</div></td></tr>';
 
   // ── Ödeme talep edilecekler (Sevk Edildi + faturası ödenmemiş satışlar) ──
   const orderRecvItems=DB.orders
@@ -2849,7 +3018,7 @@ function renderDashboard(){
       <td style="font-weight:700;color:${isOv?'#DC2626':'inherit'};white-space:nowrap">${fmt(r.amt)} ${r.currency}</td>
       <td style="white-space:nowrap;${isOv?'color:#DC2626;font-weight:700':isSn?'color:#D97706;font-weight:700':''}">${fmtDate(r.dueDate)||'—'} ${isOv?'<span class="due-badge due-overdue">GECİKMİŞ</span>':isSn?`<span class="due-badge due-soon">${dd}g</span>`:''}</td>
       <td>${badge(r.payStatus)}</td></tr>`;
-  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--muted)">Bekleyen tahsilat yok ✓</td></tr>';
+  }).join(''):'<tr><td colspan="5"><div class="empty-state"><i class="fa fa-hand-holding-dollar"></i>Bekleyen tahsilat yok ✓</div></td></tr>';
 
   // ── Ödememiz gereken faturalar ──
   const payAlert=buyInvs.filter(i=>i.payStatus!=='Ödendi').sort((a,b)=>new Date(a.dueDate||'9999')-new Date(b.dueDate||'9999')).slice(0,6);
@@ -2860,25 +3029,30 @@ function renderDashboard(){
       <td style="font-weight:700;color:${isOv?'#DC2626':isSn?'#D97706':'inherit'};white-space:nowrap">${fmt(getInvTotal(i))} ${i.currency}</td>
       <td style="white-space:nowrap;${isOv?'color:#DC2626;font-weight:700':isSn?'color:#D97706;font-weight:700':''}">${fmtDate(i.dueDate)||'—'} ${isOv?'<span class="due-badge due-overdue">GECİKMİŞ</span>':isSn?`<span class="due-badge due-soon">${dd}g</span>`:''}</td>
       <td>${badge(i.payStatus)}</td></tr>`;
-  }).join(''):'<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--muted)">Bekleyen ödeme yok ✓</td></tr>';
+  }).join(''):'<tr><td colspan="5"><div class="empty-state"><i class="fa fa-file-invoice-dollar"></i>Bekleyen ödeme yok ✓</div></td></tr>';
 
   // ── Son siparişler ──
-  document.getElementById('dash-recent-orders').innerHTML=DB.orders.slice(-5).reverse().map(o=>`<tr>
+  document.getElementById('dash-recent-orders').innerHTML=DB.orders.slice(-5).reverse().map(o=>{
+    const imgCell=o.image
+      ?`<img src="${o.image}" class="img-thumb" onclick="event.stopPropagation();showImgModal('${o.id}')" title="Görseli büyüt">`
+      :`<div class="img-placeholder" onclick="event.stopPropagation();openOrderModal('${o.id}')" title="Görsel ekle"><i class="fa fa-image"></i></div>`;
+    return`<tr class="order-row" data-oid="${o.id}" onclick="openOrderModal('${o.id}')" onmouseenter="showOrderIdCard(event,'${o.id}')" onmouseleave="hideOrderIdCard()" onmousemove="moveOrderIdCard(event)">
+    <td onclick="event.stopPropagation()">${imgCell}</td>
     <td><strong>${o.number}</strong></td>
     <td>${o.customer}<br><small style="color:var(--muted)">${o.customerCountry||''}</small></td>
     <td>${(o.lines||[]).reduce((s,l)=>s+(parseFloat(l.qty)||0),0).toLocaleString()} m</td>
     <td>${badge(o.status)}</td>
-  </tr>`).join('')||'<tr><td colspan="4" class="empty-state">Veri yok</td></tr>';
+  </tr>`;}).join('')||'<tr><td colspan="5"><div class="empty-state"><i class="fa fa-clipboard-list"></i>Veri yok</div></td></tr>';
 
   // ── Aktif sevkiyatlar ──
-  document.getElementById('dash-shipments').innerHTML=DB.ships.filter(s=>s.status!=='Teslim Edildi').map(s=>`<tr>
+  document.getElementById('dash-shipments').innerHTML=DB.ships.filter(s=>s.status!=='Teslim Edildi').map(s=>`<tr class="order-row" onclick="showView('shipments')">
     <td><strong>${s.bl||'—'}</strong></td><td>${s.destCountry}</td><td>${fmtDate(s.eta)}</td><td>${badge(s.status)}</td>
-  </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--muted)">Aktif sevkiyat yok</td></tr>';
+  </tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fa fa-ship"></i>Aktif sevkiyat yok</div></td></tr>';
 
   // ── Lab bekleyenler ──
-  document.getElementById('dash-labs').innerHTML=DB.lots.filter(l=>l.labStatus!=='Onaylı').slice(0,5).map(l=>`<tr>
+  document.getElementById('dash-labs').innerHTML=DB.lots.filter(l=>l.labStatus!=='Onaylı').slice(0,5).map(l=>`<tr class="order-row" onclick="showView('lots')">
     <td><strong>${l.lot}</strong></td><td>${l.orderId||'—'}</td><td>${l.color}</td><td>${badge(l.labStatus)}</td>
-  </tr>`).join('')||'<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--muted)">Bekleyen lab yok ✓</td></tr>';
+  </tr>`).join('')||'<tr><td colspan="4"><div class="empty-state"><i class="fa fa-flask"></i>Bekleyen lab yok ✓</div></td></tr>';
 }
 
 function renderOrders(){
@@ -3537,8 +3711,8 @@ function renderShipments(){
     return`<tr>
     <td class="chk-col"><input type="checkbox" class="ship-chk" value="${s.id}" onchange="updateShipBtn()"></td>
     <td><strong>${s.number}</strong></td>
-    <td style="font-family:monospace;font-size:12px">${s.bl||'—'}</td>
-    <td style="font-family:monospace;font-size:12px">${s.container||'—'}</td>
+    <td style="font-family:var(--font-mono);font-size:12px">${s.bl||'—'}</td>
+    <td style="font-family:var(--font-mono);font-size:12px">${s.container||'—'}</td>
     <td>${s.orderId||'—'}</td><td>${s.originPort||'—'}</td>
     <td>${s.destPort||'—'}<br><small style="color:var(--muted)">${s.destCountry}</small></td>
     <td>${fmtDate(s.loadingDate)}</td><td style="font-weight:600">${fmtDate(s.eta)}</td>
@@ -3739,7 +3913,7 @@ async function exportInvoicesPDF(){
   if(!rows.length){toast('Dışa aktarılacak fatura yok','info');return;}
   const total=rows.reduce((s,i)=>s+getInvTotal(i),0);
   const cont=document.createElement('div');
-  cont.style.cssText='position:fixed;left:-9999px;top:0;width:820px;background:#fff;color:#0D0D0D;font-family:Segoe UI,Arial,sans-serif;padding:24px';
+  cont.style.cssText='position:fixed;left:-9999px;top:0;width:820px;background:#fff;color:#0D0D0D;font-family:var(--font);padding:24px';
   cont.innerHTML='<h2 style="color:#D97706;margin:0 0 4px">UNICO TEXTEIS — Fatura Listesi</h2>'
     +'<div style="font-size:12px;color:#666;margin-bottom:12px">'+today()+' · '+rows.length+' fatura · '+(invTabFilter==='all'?'Tümü':invTabFilter)+'</div>'
     +'<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#f3f4f6">'
@@ -3749,6 +3923,8 @@ async function exportInvoicesPDF(){
     +'</tbody></table>'
     +'<div style="text-align:right;font-weight:700;margin-top:10px">TOPLAM: '+fmt(total)+' EUR</div>';
   document.body.appendChild(cont);
+  showPdfLoading();
+  await pdfPaintTick();
   try{
     const canvas=await html2canvas(cont,{scale:2,backgroundColor:'#ffffff'});
     const pdf=new jsPDF('p','mm','a4');
@@ -3761,7 +3937,7 @@ async function exportInvoicesPDF(){
     pdf.save('Faturalar_'+today()+'.pdf');
     toast('Faturalar PDF olarak indirildi','success');
   }catch(e){toast('PDF oluşturulamadı: '+e.message,'error');}
-  finally{cont.remove();}
+  finally{cont.remove();hidePdfLoading();}
 }
 function toExcel(sheets,filename){
   const wb=XLSX.utils.book_new();
@@ -3868,6 +4044,22 @@ function toast(msg,type='info'){
 }
 // Yeni mail/market kodlarındaki showToast() çağrıları için alias
 function showToast(msg,type){return toast(msg,type);}
+
+// ── PDF yükleme overlay'i (ağır jsPDF/html2canvas akışları için) ──
+function showPdfLoading(msg){
+  const el=document.getElementById('pdf-loading');if(!el)return;
+  const tx=document.getElementById('pdf-loading-text');
+  if(tx)tx.textContent=msg||((typeof T==='function'&&T('pdf_generating'))||'PDF hazırlanıyor…');
+  const sub=document.getElementById('pdf-loading-sub');
+  if(sub)sub.textContent=(typeof T==='function'&&T('pdf_generating_sub'))||'Birkaç saniye sürebilir';
+  el.classList.add('show');el.setAttribute('aria-hidden','false');
+}
+function hidePdfLoading(){
+  const el=document.getElementById('pdf-loading');if(!el)return;
+  el.classList.remove('show');el.setAttribute('aria-hidden','true');
+}
+// Overlay'in işten önce ekrana boyanmasını garanti eder (html2canvas ana iş parçacığını bloklar)
+function pdfPaintTick(){return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));}
 
 // Sessiz hataları yakalayan Global Error Handler (Antigravity İyileştirmesi)
 window.addEventListener('error', function(event) {
@@ -4406,13 +4598,13 @@ function renderCatalog(){
     <td><strong>${escHtml(p.name||'')}</strong></td><td>${escHtml(p.quality||'')}</td>
     <td>${escHtml(p.defaultUnit||'Metre')}</td><td>${p.defaultPrice?fmt(p.defaultPrice):'—'}</td>
     <td style="white-space:nowrap"><button class="btn btn-outline btn-sm" onclick="openProductModal('${p.id}')"><i class="fa fa-pen"></i></button> <button class="btn btn-danger btn-sm" onclick="delProduct('${p.id}')"><i class="fa fa-trash"></i></button></td>
-  </tr>`).join(''):'<tr><td colspan="5"><div class="empty-state" style="padding:14px"><i class="fa fa-box"></i> Ürün yok — "Siparişlerden Topla" ya da "Yeni Ürün"</div></td></tr>';
+  </tr>`).join(''):'<tr><td colspan="5"><div class="empty-state" style="padding:14px"><i class="fa fa-box"></i> Ürün yok — sipariş girince otomatik eklenir ya da "Yeni Ürün"</div></td></tr>';
   const ct=document.getElementById('cat-colors-tbody');
   if(ct)ct.innerHTML=cols.length?cols.map(c=>`<tr>
     <td><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${/^#[0-9a-f]{3,8}$/i.test(c.hex||'')?c.hex:'#ccc'};margin-right:6px;vertical-align:middle;border:1px solid rgba(0,0,0,.15)"></span><strong>${escHtml(c.name||'')}</strong></td>
     <td>${escHtml(c.code||'')}</td><td>${escHtml(c.rank||'')}</td>
     <td style="white-space:nowrap"><button class="btn btn-outline btn-sm" onclick="openColorModal('${c.id}')"><i class="fa fa-pen"></i></button> <button class="btn btn-danger btn-sm" onclick="delColor('${c.id}')"><i class="fa fa-trash"></i></button></td>
-  </tr>`).join(''):'<tr><td colspan="4"><div class="empty-state" style="padding:14px"><i class="fa fa-palette"></i> Renk yok — "Siparişlerden Topla" ya da "Yeni Renk"</div></td></tr>';
+  </tr>`).join(''):'<tr><td colspan="4"><div class="empty-state" style="padding:14px"><i class="fa fa-palette"></i> Renk yok — sipariş girince otomatik eklenir ya da "Yeni Renk"</div></td></tr>';
 }
 function openProductModal(id){
   const p=id?(DB.products||[]).find(x=>x.id===id):null;
@@ -4880,7 +5072,7 @@ function addPiePercentPlugin(chart){
     const total=ds.data.reduce((s,v)=>s+v,0);
     if(!total)return;
     ctx.save();
-    ctx.font='bold 11px Segoe UI';
+    ctx.font="bold 11px Inter, sans-serif";
     ctx.fillStyle='#fff';
     ctx.textAlign='center';
     ctx.textBaseline='middle';
@@ -5470,7 +5662,7 @@ function saveFashionToMemory(prompt){
 function printFashion(){
   if(!window.__lastFashion)return;
   const w=window.open('','_blank');
-  w.document.write('<html><head><title>UNICOTAI Trend Raporu</title><style>body{font-family:Segoe UI,sans-serif;padding:30px;max-width:800px;margin:0 auto;line-height:1.7;color:#0D0D0D}h1,h2,h3,h4{color:var(--accent)}h1{border-bottom:3px solid var(--accent);padding-bottom:8px}</style></head><body>');
+  w.document.write('<html><head><title>UNICOTAI Trend Raporu</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>body{font-family:\'Inter\',\'Segoe UI\',Arial,sans-serif;padding:30px;max-width:800px;margin:0 auto;line-height:1.7;color:#0D0D0D}h1,h2,h3,h4{color:var(--accent)}h1{border-bottom:3px solid var(--accent);padding-bottom:8px}</style></head><body>');
   w.document.write('<h1>UNICO TEXTEIS — Trend & Kumaş AR-GE Raporu</h1>');
   w.document.write('<p style="color:#666;font-size:11px">Hazırlayan: UNICOTAI · '+new Date().toLocaleString('tr-TR')+'</p>');
   w.document.write('<div style="white-space:pre-wrap">'+window.__lastFashion+'</div>');
@@ -5479,6 +5671,9 @@ function printFashion(){
 
 function exportReports(){
   toast('Rapor hazırlanıyor...','info');
+  showPdfLoading();
+  // Güvenlik ağı: herhangi bir sebeple kapanmazsa overlay 8 sn sonra kendini gizler
+  setTimeout(hidePdfLoading,8000);
   // Önce raporu tazele
   try{renderReports();}catch(e){}
 
@@ -5504,12 +5699,13 @@ function exportReports(){
     const headerInfo=`Yıl: ${yearSel?yearSel.options[yearSel.selectedIndex].text:'—'} · Dönem: ${periodSel?periodSel.options[periodSel.selectedIndex].text:'—'} · Para: ${curSel?(curSel.value||'Tümü'):'—'}`;
 
     const w=window.open('','_blank');
-    if(!w){toast('Pop-up engellendi — tarayıcı ayarlarından izin ver','error');return;}
+    if(!w){toast('Pop-up engellendi — tarayıcı ayarlarından izin ver','error');hidePdfLoading();return;}
     const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>UNICO TEXTEIS Raporu — ${new Date().toLocaleDateString('tr-TR')}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   :root{--accent:#D97706;--primary:#1E40AF;--border:#E5E7EB;--muted:#666;--card:#fff;--bg:#fff;--text:#0D0D0D;--hover:#F1F5F9}
-  body{font-family:'Segoe UI',sans-serif;padding:30px;color:#0D0D0D;line-height:1.5;background:#fff;max-width:1100px;margin:0 auto}
+  body{font-family:'Inter','Segoe UI',Arial,sans-serif;padding:30px;color:#0D0D0D;line-height:1.5;background:#fff;max-width:1100px;margin:0 auto}
   .pdf-header{border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:20px}
   .pdf-header h1{font-size:22px;font-weight:800;color:#0D0D0D}
   .pdf-header .sub{font-size:11px;color:#666;margin-top:4px}
@@ -5534,7 +5730,17 @@ function exportReports(){
   .badge-gray{background:#F1F5F9;color:#475569}
   .badge-purple{background:#EDE9FE;color:#5B21B6}
   .pdf-footer{margin-top:30px;padding-top:14px;border-top:1px solid #E5E7EB;font-size:10px;color:#666;text-align:center}
-  @media print{body{padding:15px}.charts{page-break-inside:avoid}}
+  section{margin-bottom:18px}
+  @page{margin:14mm 11mm}
+  @media print{
+    body{padding:0;max-width:none}
+    section{break-inside:avoid;page-break-inside:avoid}
+    h2{break-after:avoid;page-break-after:avoid}
+    .pdf-header{break-after:avoid;page-break-after:avoid}
+    .stat-grid,.charts,.stat-card,.chart-box,tr,img{break-inside:avoid;page-break-inside:avoid}
+    thead{display:table-header-group}
+    tfoot{display:table-footer-group}
+  }
 .market-tab-bar{display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap}
 .market-tab{padding:9px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--muted);transition:.2s;border-bottom:2px solid transparent;margin-bottom:-2px}
 .market-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -5570,22 +5776,30 @@ function exportReports(){
   </div>
 </div>
 
+<section>
 <h2>📊 Anahtar Göstergeler</h2>
 <div class="stat-grid">${kpisHtml}</div>
+</section>
 
+<section>
 <div class="charts">
   ${chartImages.trend?`<div class="chart-box"><h3>📈 Yıllık Ciro Trendi</h3><img src="${chartImages.trend}"></div>`:''}
   ${chartImages.cust?`<div class="chart-box"><h3>🏆 Top 10 Müşteri</h3><img src="${chartImages.cust}"></div>`:''}
   ${chartImages.country?`<div class="chart-box"><h3>🌍 Ülke Dağılımı</h3><img src="${chartImages.country}"></div>`:''}
   ${chartImages.status?`<div class="chart-box"><h3>📦 Sipariş Durum Dağılımı</h3><img src="${chartImages.status}"></div>`:''}
 </div>
+</section>
 
+<section>
 <h2>📅 Alacak Yaşlandırması (Aging Report)</h2>
 <table><thead><tr><th>Müşteri</th><th>0-30 Gün</th><th>31-60 Gün</th><th>61-90 Gün</th><th>90+ Gün (Riskli)</th><th>Toplam</th></tr></thead><tbody>${agingHtml||'<tr><td colspan="6" style="text-align:center;color:#10B981">✓ Vadesi geçmiş alacak yok</td></tr>'}</tbody></table>
+</section>
 
+<section>
 <h2>💰 Kâr & Marj Analizi (Sipariş No bazlı Satış-Alış Eşleştirme)</h2>
 ${marginSum}
 ${marginTbl}
+</section>
 
 <div class="pdf-footer">
   UNICO TEXTEIS · Portekiz · Online Takip Sistemi · ${new Date().getFullYear()}<br>
@@ -5596,6 +5810,7 @@ ${marginTbl}
 </body></html>`;
     w.document.open();w.document.write(html);w.document.close();
     toast('PDF/Yazdır penceresi açıldı','success');
+    hidePdfLoading();
   },700);
 }
 
@@ -6494,7 +6709,7 @@ async function generateAIReport(title, bodyText, extraImages){
   bodyHtml='<p>'+bodyHtml.replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>')+'</p>';
   const imgsHtml=(extraImages||[]).map(u=>'<img src="'+u+'" style="max-width:100%;border:1px solid #eee;border-radius:8px;margin:10px 0;display:block">').join('');
   const container=document.createElement('div');
-  container.style.cssText='position:fixed;left:-99999px;top:0;width:794px;background:#fff;padding:48px;font-family:\'Segoe UI\',Arial,sans-serif;color:#1f2937;box-sizing:border-box;line-height:1.65';
+  container.style.cssText='position:fixed;left:-99999px;top:0;width:794px;background:#fff;padding:48px;font-family:var(--font);color:#1f2937;box-sizing:border-box;line-height:1.65';
   container.innerHTML=
     '<div style="display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--accent);padding-bottom:14px;margin-bottom:22px">'+
       '<div style="width:46px;height:46px;border-radius:12px;background:var(--accent);color:#fff;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center">U</div>'+
@@ -6507,6 +6722,8 @@ async function generateAIReport(title, bodyText, extraImages){
       'Anlık veri: '+DB.orders.length+' sipariş · '+(DB.customers||[]).length+' cari · '+DB.invs.length+' fatura ('+overdue+' vadesi geçen) · '+DB.ships.length+' sevkiyat · '+DB.lots.length+' lab kaydı'+
     '</div>';
   document.body.appendChild(container);
+  showPdfLoading();
+  await pdfPaintTick();
   try{
     const canvas=await html2canvas(container,{scale:2,backgroundColor:'#ffffff',useCORS:true});
     const imgData=canvas.toDataURL('image/jpeg',0.92);
@@ -6519,7 +6736,7 @@ async function generateAIReport(title, bodyText, extraImages){
     const fname='UNICOTAI_Rapor_'+today.toISOString().slice(0,10)+'_'+today.toTimeString().slice(0,5).replace(':','')+'.pdf';
     pdf.save(fname);
     return fname;
-  } finally { document.body.removeChild(container); }
+  } finally { document.body.removeChild(container); hidePdfLoading(); }
 }
 
 // Kullanıcı "rapor/pdf hazırla" dediğinde: AI içeriği üretir → PDF indirir → sunar
