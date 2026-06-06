@@ -1,3 +1,10 @@
+# Gizli — API anahtarı içeren yerel yükleyici, ASLA paylaşma
+unico-keys.js
+
+# Gizli — GitHub PAT vb. ortam degiskenleri, ASLA commit etme
+.env
+.env.*
+
 *.backup-*.html
 ~$*
 .vscode/
