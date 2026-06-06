@@ -657,19 +657,19 @@ input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--pr
     <div class="sb-section" data-i18n="sec_finance">Finans</div>
     <div class="sb-item" data-view="invoices"><i class="fa fa-file-invoice-dollar"></i> <span data-i18n="invoices">Faturalar</span></div>
     <div class="sb-item" data-view="customers"><i class="fa fa-id-card"></i> <span data-i18n="customers">Cari Kartlar</span></div>
-    <div class="sb-item" data-view="catalog"><i class="fa fa-swatchbook"></i> <span>Ürün &amp; Renk</span></div>
+    <div class="sb-item" data-view="catalog"><i class="fa fa-swatchbook"></i> <span data-i18n="nav_catalog">Ürün &amp; Renk</span></div>
     <div class="sb-item" data-view="reports"><i class="fa fa-chart-column"></i> <span data-i18n="reports">Raporlar & Analiz</span></div>
-    <div class="sb-item" data-view="balance"><i class="fa fa-scale-balanced"></i> <span>Bilanço & Vergi</span> <span style="font-size:9px;background:#0EA5E9;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">PT</span></div>
+    <div class="sb-item" data-view="balance"><i class="fa fa-scale-balanced"></i> <span data-i18n="nav_balance">Bilanço & Vergi</span> <span style="font-size:9px;background:#0EA5E9;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">PT</span></div>
     <div class="sb-section" data-i18n="sec_tools">Araçlar</div>
     <div class="sb-item" data-view="tools"><i class="fa fa-chart-line"></i> <span data-i18n="tools">Piyasa / Kurlar</span></div>
-    <div class="sb-item" data-view="memory"><i class="fa fa-brain"></i> <span>UNICOAI-MEMORY</span></div>
+    <div class="sb-item" data-view="memory"><i class="fa fa-brain"></i> <span data-i18n="memory">UNICOAI-MEMORY</span></div>
     <div class="sb-item" data-view="trash"><i class="fa fa-trash-can"></i> <span data-i18n="trash">Çöp Kutusu</span></div>
     <div class="sb-item" onclick="exportAll()"><i class="fa fa-download"></i> <span data-i18n="exportAll">Tümünü Export Et</span></div>
     <div class="sb-item" onclick="document.getElementById('importFile').click()"><i class="fa fa-upload"></i> <span data-i18n="excelImport">Excel Import</span></div>
     <input type="file" id="importFile" accept=".xlsx,.xls" style="display:none" onchange="importFromExcel(this)">
-    <div class="sb-section">AI Ajanlar</div>
-    <div class="sb-item" data-view="planner"><i class="fa fa-calendar-days"></i> <span>Ajanda &amp; Planlayıcı</span> <span style="font-size:9px;background:#6366F1;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">YENİ</span></div>
-    <div class="sb-item" data-view="prospect"><i class="fa fa-earth-europe"></i> <span>Pazar &amp; Müşteri İstihbaratı</span> <span style="font-size:9px;background:#1E40AF;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">AJAN</span></div>
+    <div class="sb-section" data-i18n="sec_ai">AI Ajanlar</div>
+    <div class="sb-item" data-view="planner"><i class="fa fa-calendar-days"></i> <span data-i18n="planner">Ajanda &amp; Planlayıcı</span> <span style="font-size:9px;background:#6366F1;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">YENİ</span></div>
+    <div class="sb-item" data-view="prospect"><i class="fa fa-earth-europe"></i> <span data-i18n="prospect">Pazar &amp; Müşteri İstihbaratı</span> <span style="font-size:9px;background:#1E40AF;color:#fff;padding:1px 5px;border-radius:8px;margin-left:auto">AJAN</span></div>
 <div class="sb-section" data-i18n="sec_account">Hesap</div>
     <div class="sb-item" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> <span data-i18n="logout">Çıkış Yap</span></div>
   </div>
@@ -2447,6 +2447,10 @@ const I18N={
     searchPh:'Sipariş, B/L, fatura ara...',
     // Yeni görünümler (panel/loadings)
     panel:'Üretim Panosu',loadings:'Yüklemelerim',
+    // Header başlıkları — showView page-title T(name) ile gelir; bunlar I18N'de yoktu → header ham 'catalog'/'balance'/'planner'/'prospect' gösteriyordu
+    catalog:'Katalog',balance:'Bilanço & Vergi (Portekiz)',planner:'Ajanda & Planlayıcı',prospect:'Pazar & Müşteri İstihbaratı',market:'Pazar Analizi',mail:'Mailler',
+    // Sidebar nav etiketleri (header'dan farkli olanlar + AI bolum basligi)
+    nav_catalog:'Ürün & Renk',nav_balance:'Bilanço & Vergi',sec_ai:'AI Ajanlar',
     // Dashboard
     totalOrders:'Toplam Sipariş Tutarı',production:'Üretim/Hazırlık',demandPay:'Talep Edilecek Ödeme',
     collected:'Tahsil Edilen',labPending:'Lab Onay Bekleyen',activeShip:'Aktif Sevkiyat',
@@ -2480,6 +2484,10 @@ const I18N={
     searchPh:'Search order, B/L, invoice...',
     // New views (panel/loadings)
     panel:'Production Board',loadings:'My Loadings',
+    // Header titles — page-title via T(name); these were missing in I18N → header showed raw 'catalog'/'balance'/etc.
+    catalog:'Catalog',balance:'Balance & Tax (Portugal)',planner:'Agenda & Planner',prospect:'Market & Customer Intel',market:'Market Analysis',mail:'Mails',
+    // Sidebar nav labels (different from header) + AI section
+    nav_catalog:'Products & Colors',nav_balance:'Balance & Tax',sec_ai:'AI Agents',
     totalOrders:'Total Order Value',production:'Production/Prep',demandPay:'Payment to Request',
     collected:'Collected',labPending:'Lab Approval Pending',activeShip:'Active Shipment',
     financialStatus:'Financial Status',netPosition:'Net Position',
